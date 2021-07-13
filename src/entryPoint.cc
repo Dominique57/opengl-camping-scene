@@ -5,6 +5,7 @@
 #include "wrappers/glWrapper.hh"
 #include <GLFW/glfw3.h>
 #include <vector>
+#include <temp/vao.hh>
 #include "temp/camera.hh"
 #include "temp/init_gl.hh"
 #include "temp/program.hh"
@@ -82,34 +83,6 @@ void addVariables(const program &program) {
     */
 }
 
-void addObjects(const program &program, const ObjLoader::ObjData &objData) {
-    // Create VAO
-    GLuint vao_id;
-    glGenVertexArrays(1, &vao_id);
-    glBindVertexArray(vao_id);
-
-    // Create vbo
-    GLuint vbo_id = 0;
-    glGenBuffers(1, &vbo_id);
-    glBindBuffer(GL_ARRAY_BUFFER, vbo_id);
-
-    // Get single data buffer from ObjData
-    std::vector<GLfloat> points;
-    points.reserve(objData.faces.size());
-    for (auto i = 0U; i < objData.faces.size(); ++i)
-        for (auto j = 0; j < 3; ++j)
-            points.push_back(objData.vertices[(objData.faces[i] - 1) * 3 + j]);
-
-    glBufferData(GL_ARRAY_BUFFER, 3 * objData.faces.size() * sizeof(GLfloat),
-                 points.data(), GL_STATIC_DRAW);
-
-    // Activate VBO position reading order
-    GLint posLoc = glGetAttribLocSafe(program.get_program(), "vPosition");
-    glVertexAttribPointer(posLoc, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
-                          nullptr);
-    glEnableVertexAttribArray(posLoc);
-}
-
 #define KEY_FOREWARD GLFW_KEY_W
 #define KEY_BACKWARDS GLFW_KEY_S
 #define KEY_LEFT GLFW_KEY_A
@@ -154,7 +127,7 @@ int run() {
         return -1;
 
     glfwSetKeyCallback(window, handleKey);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+//    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, handleMouseMove);
 
     int screen_w, screen_h;
@@ -171,9 +144,16 @@ int run() {
     }
     program->use();
     auto objLoader = ObjLoader();
-    auto objData = objLoader.loadObj("teddy.obj");
-    addObjects(*program, objData);
-    // addVariables(*program);
+    auto objData = objLoader.loadObj("test.obj");
+    auto objDatatea = objLoader.loadObj("teapot.obj");
+    for(auto& vertice : objDatatea.vertices)
+        vertice += 10.0;
+    auto vao = Vao();
+    vao.addObjData(objData);
+    vao.addObjData(objDatatea);
+    vao.bindToProgram(*program, "vPosition");
+//     addObjects(*program, objData);
+//     addVariables(*program);
 
 
     /* Loop until the user closes the window */
@@ -181,9 +161,8 @@ int run() {
         program->setUniformMat4("transform_matrix", camera.getTransform(), true);
 
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glDrawArrays(GL_TRIANGLES, 0, objData.faces.size());
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); TEST_OPENGL_ERROR()
+        vao.draw();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
