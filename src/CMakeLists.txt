@@ -18,7 +18,8 @@ add_library(SOURCE_LIB STATIC
     temp/init_gl.cc temp/init_gl.hh
     temp/objLoader.cc temp/objLoader.hh
     temp/program.cc temp/program.hh
-        temp/mesh.cpp temp/mesh.hh
+        temp/mesh.cc temp/mesh.hh
+        temp/model.cc temp/model.hh
 
     wrappers/glWrapper.cc wrappers/glWrapper.hh
     wrappers/glmWrapper.hh

@@ -8,13 +8,16 @@
 
 struct Vertex {
     glm::vec3 Position; // position of the vertex
-    glm::vec2 Normal; // Normal of the vertex
-    glm::vec3 TexCoords; // coordinates on the texture
+    glm::vec3 Normal; // Normal of the vertex
+    glm::vec2 TexCoords; // coordinates on the texture
+    glm::vec3 Tangent;
+    glm::vec3 Bitangent;
 };
 
 struct Texture {
     unsigned int id;
     std::string type;
+    std::string path;
 };
 
 class Mesh
