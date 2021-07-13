@@ -84,8 +84,7 @@ void program::setUniformMat4(const std::string& name,
         const glm::mat4& val, bool throwIfMissing) const {
     GLint eltLoc = glGetUniformLocSafe(program_, name.c_str());
     if (eltLoc != -1) {
-        glProgramUniform3f(program_, eltLoc, 0.25f, 0.25f, 1.f);
-        glProgramUniformMatrix4fv(program_, eltLoc, 1, GL_FALSE, &val[0][0]);
+        glProgramUniformMatrix4fv(program_, eltLoc, 1, GL_FALSE, &val[0][0]); TEST_OPENGL_ERROR()
     } else if (throwIfMissing) {
         throw std::invalid_argument("Name does not exist in shader !");
     }
