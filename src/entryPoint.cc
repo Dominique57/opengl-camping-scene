@@ -166,12 +166,12 @@ int run() {
 
     std::vector<std::string> faces
             {
-                    "skybox/right.jpg",
-                    "skybox/left.jpg",
-                    "skybox/top.jpg",
-                    "skybox/bottom.jpg",
-                    "skybox/front.jpg",
-                    "skybox/back.jpg"
+                    "skybox/grimm_night/right.jpg",
+                    "skybox/grimm_night/left.jpg",
+                    "skybox/grimm_night/top.jpg",
+                    "skybox/grimm_night/bottom.jpg",
+                    "skybox/grimm_night/front.jpg",
+                    "skybox/grimm_night/back.jpg"
             };
 
     // skybox VAO
