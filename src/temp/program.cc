@@ -79,7 +79,6 @@ program* program::make_program(
     return res;
 }
 
-
 void program::setUniformMat4(const std::string& name,
         const glm::mat4& val, bool throwIfMissing) const {
     GLint eltLoc = glGetUniformLocSafe(program_, name.c_str());
