@@ -176,7 +176,6 @@ int run() {
 
     // skybox VAO
     Skybox skybox{faces};
-    unsigned int cubemapTexture = loadCubemap(faces);
 
     auto* skyboxShader = program::make_program_path("vert/vert_skybox.glsl", "frag/frag_skybox.glsl");
     if (!skyboxShader->isready()) {
@@ -185,7 +184,7 @@ int run() {
         return 1;
     }
     skyboxShader->use();
-    skyboxShader->setInt("skybox", 0);
+    skybox.bindToProgram(*skyboxShader);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {

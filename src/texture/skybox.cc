@@ -28,7 +28,8 @@ void Skybox::draw() {
     glDepthFunc(GL_LESS); // set depth function back to default
 }
 
-Skybox::~Skybox()
-{
-
+void Skybox::bindToProgram(const program &program) {
+    glUniform1i(glGetUniformLocation(program.get_program(), "skybox"), 0);
 }
+
+Skybox::~Skybox(){}

@@ -9,7 +9,7 @@ public:
     Skybox(std::vector<std::string> faces);
     ~Skybox();
     void draw();
-
+    void bindToProgram(const program &program);
 private:
     static constexpr float skyboxVertices[] = {
             // positions
