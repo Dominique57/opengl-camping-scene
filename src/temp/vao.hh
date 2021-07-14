@@ -8,14 +8,15 @@
 class Vao {
 private:
     struct VboData {
-        GLuint vertexBufferId;
+        GLuint verticeBufferId;
+        GLuint normalBufferId;
     };
 public:
     Vao();
 
     void addObjData(const ObjLoader::ObjData &objData);
 
-    void bindToProgram(const program &program, const char *vertexName);
+    void bindToProgram(const program &program, const char *verticeName, const char *normalName);
 
     void draw();
 
@@ -23,4 +24,5 @@ private:
     GLuint vaoId;
     VboData vboData;
     std::vector<GLfloat> vertices;
+    std::vector<GLfloat> normals;
 };

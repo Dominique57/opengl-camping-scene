@@ -1,6 +1,5 @@
 #version 460 core
 
-
 uniform mat4 transform_matrix;
 uniform vec3 lightPos;
 

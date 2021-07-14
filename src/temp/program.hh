@@ -24,15 +24,18 @@ public:
 
     GLuint get_program() const { return program_; }
 
-    void setUniformMat4(const std::string& name, const glm::mat4& val,
-            bool throwIfMissing=false) const;
+    void setUniformMat4(const char *name, const glm::mat4& val,
+                        bool throwIfMissing=false) const;
+
+    void setUniformVec3(const char *name, const glm::vec3 &val,
+                        bool throwIfMissing=false) const;
 
     void setBool(const std::string &name, bool value) const;
     void setInt(const std::string &name, int value) const;
     void setFloat(const std::string &name, float value) const;
 
 protected:
-    program(GLuint program, std::string log, bool ready)
+    program(GLuint program, const std::string& log, bool ready)
         : program_(program), log_(log), ready_(ready)
     {}
 

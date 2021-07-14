@@ -44,7 +44,7 @@ glm::mat4 Camera::getTransform() const {
         glm::radians(45.0f),
         1.0f,
         0.1f,
-        100.f
+        600.f
     );
 
     return perspective * viewMat;
