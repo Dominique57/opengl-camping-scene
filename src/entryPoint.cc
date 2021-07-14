@@ -11,6 +11,8 @@
 #include "temp/init_gl.hh"
 #include "temp/program.hh"
 #include "temp/objLoader.hh"
+#include "temp/stb_image.h"
+#include "texture/skybox.hh"
 
 void addObjects(const program &program) {
     // Vertex array
@@ -123,6 +125,7 @@ void handleMouseMove(GLFWwindow* window, double xpos, double ypos) {
     glfwSetCursorPos(window, (double)screen_w / 2, (double)screen_h / 2);
 }
 
+
 int run() {
     if (!initOpenglAndContext(window))
         return -1;
@@ -144,6 +147,7 @@ int run() {
         return 1;
     }
     program->use();
+
     auto objLoader = ObjLoader();
     auto objData = objLoader.loadObj("test.obj");
     auto objDatatea = objLoader.loadObj("teapot.obj");
@@ -153,21 +157,48 @@ int run() {
     vao.addObjData(objData);
     vao.addObjData(objDatatea);
     vao.bindToProgram(*program, "vPosition");
-//     addObjects(*program, objData);
-//     addVariables(*program);
 
     auto lightManager = LightManager();
     auto l1 = lightManager.addLight({ 1, 1, 1 }, { 0, 1, 0 });
     auto l2 = lightManager.addLight({ 1, 0, 0 }, { 0, 0, 1 });
     lightManager.updateLights();
 
+
+    std::vector<std::string> faces
+            {
+                    "skybox/right.jpg",
+                    "skybox/left.jpg",
+                    "skybox/top.jpg",
+                    "skybox/bottom.jpg",
+                    "skybox/front.jpg",
+                    "skybox/back.jpg"
+            };
+
+    // skybox VAO
+    Skybox skybox{faces};
+
+    auto* skyboxShader = program::make_program_path("vert/vert_skybox.glsl", "frag/frag_skybox.glsl");
+    if (!skyboxShader->isready()) {
+        std::cerr << "Failed to build shader :\n" << skyboxShader->getlog() << '\n';
+        delete skyboxShader;
+        return 1;
+    }
+    skyboxShader->use();
+    skybox.bindToProgram(*skyboxShader);
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
         program->setUniformMat4("transform_matrix", camera.getTransform(), true);
+        skyboxShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
 
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); TEST_OPENGL_ERROR()
+
+        program->use();
         vao.draw();
+
+        skyboxShader->use();
+        skybox.draw();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -178,5 +209,6 @@ int run() {
 
     glfwTerminate();
     delete program;
+    delete skyboxShader;
     return 0;
 }
