@@ -89,3 +89,18 @@ void program::setUniformMat4(const std::string& name,
         throw std::invalid_argument("Name does not exist in shader !");
     }
 }
+
+void program::setBool(const std::string &name, bool value) const
+{
+    glUniform1i(glGetUniformLocation(program_, name.c_str()), (int)value);
+}
+
+void program::setInt(const std::string &name, int value) const
+{
+    glUniform1i(glGetUniformLocation(program_, name.c_str()), value);
+}
+
+void program::setFloat(const std::string &name, float value) const
+{
+    glUniform1f(glGetUniformLocation(program_, name.c_str()), value);
+}
