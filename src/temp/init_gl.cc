@@ -35,7 +35,7 @@ bool initGlfw(GLFWwindow* &window) {
         return false;
     }
 
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(1080, 720, "Hello World", NULL, NULL);
     if (!window) {
         std::cerr << "Glfw windows creation failed !\n";
         return false;
@@ -47,6 +47,8 @@ bool initGlfw(GLFWwindow* &window) {
 }
 
 bool initGl() {
+    glEnable(GL_DEPTH_TEST);
+//    glEnable(GL_CULL_FACE);
     return true;
 }
 

@@ -5,6 +5,13 @@
 #include <vector>
 #include "temp/init_gl.hh"
 
+#define TEST_OPENGL_ERROR()   { \
+    GLenum err = glGetError();	\
+    if (err != GL_NO_ERROR)     \
+        std::cerr << "OpenGL ERROR (code: " << err << ") at " \
+            << __FILE__ << ":" <<  __LINE__ << std::endl; \
+  }
+
 std::vector<GLchar> getShaderLog(GLint shader);
 std::vector<GLchar> getProgramLog(GLint program);
 
@@ -14,11 +21,3 @@ void linkShader(GLuint program, std::initializer_list<GLuint> shaders);
 
 GLint glGetUniformLocSafe(GLuint program, const char* name);
 GLint glGetAttribLocSafe(GLuint program, const char* name);
-
-#define TEST_OPENGL_ERROR()     \
-  {                             \
-    GLenum err = glGetError();	\
-    if (err != GL_NO_ERROR)     \
-        std::cerr << "OpenGL ERROR (code: " << err << ") at " \
-            << __FILE__ << ":" <<  __LINE__ << std::endl; \
-  }
