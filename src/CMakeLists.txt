@@ -22,7 +22,8 @@ add_library(SOURCE_LIB STATIC
     wrappers/glWrapper.cc wrappers/glWrapper.hh
     wrappers/glmWrapper.hh
     wrappers/wrapper.cc wrappers/wrapper.hh
-    temp/vao.cc temp/vao.hh)
+    temp/vao.cc temp/vao.hh
+    temp/lightManager.cc temp/lightManager.hh)
 target_compile_features(SOURCE_LIB PRIVATE
     cxx_std_17
     )
