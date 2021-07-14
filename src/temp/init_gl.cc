@@ -47,6 +47,8 @@ bool initGlfw(GLFWwindow* &window) {
 }
 
 bool initGl() {
+    glEnable(GL_DEPTH_TEST);
+//    glEnable(GL_CULL_FACE);
     return true;
 }
 
