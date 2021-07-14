@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 #include <vector>
 #include <temp/vao.hh>
+#include <temp/lightManager.hh>
 #include "temp/camera.hh"
 #include "temp/init_gl.hh"
 #include "temp/program.hh"
@@ -126,17 +127,17 @@ int run() {
     if (!initOpenglAndContext(window))
         return -1;
 
+    // Input callbacks
     glfwSetKeyCallback(window, handleKey);
 //    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, handleMouseMove);
-
+    // Reset cursor to center of the screen
     int screen_w, screen_h;
     glfwGetWindowSize(window, &screen_w, &screen_h);
     glfwSetCursorPos(window, (double)screen_w / 2, (double)screen_h / 2);
 
     /* Make the window's context current */
-    auto* program = program::make_program_path(
-            "vert/shader2.glsl", "frag/shader2.glsl");
+    auto* program = program::make_program_path("vert/shader2.glsl", "frag/shader2.glsl");
     if (!program->isready()) {
         std::cerr << "Failed to build shader :\n" << program->getlog() << '\n';
         delete program;
@@ -155,6 +156,10 @@ int run() {
 //     addObjects(*program, objData);
 //     addVariables(*program);
 
+    auto lightManager = LightManager();
+    auto l1 = lightManager.addLight({ 1, 1, 1 }, { 0, 1, 0 });
+    auto l2 = lightManager.addLight({ 1, 0, 0 }, { 0, 0, 1 });
+    lightManager.updateLights();
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
