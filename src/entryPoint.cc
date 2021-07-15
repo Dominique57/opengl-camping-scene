@@ -70,22 +70,6 @@ int run() {
     glfwGetWindowSize(window, &screen_w, &screen_h);
     glfwSetCursorPos(window, (double)screen_w / 2, (double)screen_h / 2);
 
-    /* Make the window's context current */
-//    auto* program = program::make_program_path("vert/shader2.glsl", "frag/shader2.glsl");
-//    if (!program->isready()) {
-//        std::cerr << "Failed to build shader :\n" << program->getlog() << '\n';
-//        delete program;
-//        return 1;
-//    }
-//    program->use();
-
-//    auto objLoader = ObjLoader();
-////    auto objData = objLoader.loadObj("cube.obj");
-//    auto objData = objLoader.loadObj("teapot_norm.obj");
-//    auto vao = Vao();
-//    vao.addObjData(objData);
-//    vao.bindToProgram(*program, "vPosition", "vNormal");
-
     auto lightManager = LightManager();
     auto l1 = lightManager.addLight({ 0, 2, 30 }, { 1, 1, 1 });
     auto l2 = lightManager.addLight({ 0, 2, -30 }, { 0.8, 0.1, 0.1 });
@@ -120,22 +104,6 @@ int run() {
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
-    // build and compile shaders
-    // -------------------------
-//    auto* grass_shader = program::make_program_path("vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl");
-//    if (!grass_shader->isready()) {
-//        std::cerr << "Failed to build shader :\n" << grass_shader->getlog() << '\n';
-//        delete grass_shader;
-//        return 1;
-//    }
-//
-//    auto* tree_shader = program::make_program_path("vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl");
-//    if (!tree_shader->isready()) {
-//        std::cerr << "Failed to build shader :\n" << tree_shader->getlog() << '\n';
-//        delete tree_shader;
-//        return 1;
-//    }
-
     // load models
     // -----------
     Model grass("textures/grass/10450_Rectangular_Grass_Patch_v1_iterations-2.obj");
@@ -151,10 +119,11 @@ int run() {
                     "frag/obj_fragment_shader.glsl");
 
 
+    // tweak models
+    // -----------
     models.translateModel(0, glm::vec3(0.0f, -20.0f, 0.0f));
     models.scaleModel(0, glm::vec3(0.2f, 0.2f, 0.2f));
     models.rotateModel(0, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
-
 
     models.translateModel(1, glm::vec3(0.0f, -18.0f, 0.0f));
     models.scaleModel(1, glm::vec3(3.0f, 3.0f, 3.0f));
