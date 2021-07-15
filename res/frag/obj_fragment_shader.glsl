@@ -25,7 +25,7 @@ out vec4 out_color;
 float diffusionFactor = 0.7;
 float specularFactor = 0.8;
 float specularShininess = 32;
-float ambiantFactor = 0.1;
+float ambiantFactor = 1;
 
 vec3 computeDiffuseAndSpecular(vec3 objectColor) {
     vec3 resColor = vec3(0);
@@ -42,7 +42,7 @@ vec3 computeDiffuseAndSpecular(vec3 objectColor) {
 
         resColor += clamp(diffuseColor, 0, 1) + clamp(specularColor, 0, 1);
     }
-    vec3 minColor = ambiantFactor * vec3(1, 1, 1); // minimum is ambiant light
+    vec3 minColor = ambiantFactor * objectColor; // minimum is ambiant light
     return clamp(resColor, minColor, vec3(1));
 }
 

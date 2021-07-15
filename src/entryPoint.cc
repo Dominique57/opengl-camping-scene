@@ -138,7 +138,7 @@ int run() {
     // load models
     // -----------
     Model grass("textures/grass/10450_Rectangular_Grass_Patch_v1_iterations-2.obj");
-    Model tree("textures/tree/TreeSet3/OBJ format/conifer_macedonian_pine.obj");
+    Model tree("textures/tree/TreeSet4/Tree 02/Tree.obj");
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
@@ -166,8 +166,8 @@ int run() {
         grass.draw(grass_shader);
 
         glm::mat4 model_tree = glm::mat4(1.0f);
-        model_tree = glm::translate(model_tree, glm::vec3(0.0f, -20.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model_tree = glm::scale(model_tree, glm::vec3(0.01f, 0.01f, 0.01f));	// it's a bit too big for our scene, so scale it down
+        model_tree = glm::translate(model_tree, glm::vec3(0.0f, -18.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model_tree = glm::scale(model_tree, glm::vec3(3.0f, 3.0f, 3.0f));	// it's a bit too big for our scene, so scale it down
 //        model_tree = glm::rotate(model_tree, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
         TEST_OPENGL_ERROR()
         tree_shader->setUniformMat4("model", model_tree, true);
