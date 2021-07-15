@@ -73,7 +73,7 @@ int run() {
     glfwSetCursorPos(window, (double)screen_w / 2, (double)screen_h / 2);
 
     auto lightManager = LightManager();
-//    lightManager.addLight(camera.viewCameraPos(), { 1, 1, 1 });
+    lightManager.addLight(camera.viewCameraPos(), { 1, 1, 1 });
     lightManager.updateLights();
 
     std::vector<std::string> faces {
@@ -113,12 +113,20 @@ int run() {
                    "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
                    {0.8, 0.8, 256});
 
+    stbi_set_flip_vertically_on_load(true);
+    Model backpack("textures/backpack/backpack.obj",
+                   "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
+                   {0.8, 0.8, 256});
+    stbi_set_flip_vertically_on_load(false);
+
     Models models{};
     auto grass_id1 = models.addModel(grass);
     auto tree_id1 = models.addModel(tree);
     auto tree_id2 = models.addModel(tree);
     auto bench_id1 = models.addModel(bench);
     auto firewood_id1 = models.addModel(firewood);
+
+    auto backpack_id1 = models.addModel(backpack);
 
 
     // tweak models
@@ -136,6 +144,10 @@ int run() {
 
     models.translateModel(firewood_id1, glm::vec3(10.0f, -18.0f, 0.0f));
     models.scaleModel(firewood_id1, glm::vec3(2.0f, 2.0f, 2.0f));
+
+    models.translateModel(backpack_id1, glm::vec3(12.0f, -14.0f, -10.5f));
+    models.rotateModel(backpack_id1, -40.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+    models.rotateModel(backpack_id1, -10.0f, glm::vec3(0.0f, 0.0f, 1.0f));
 
     TEST_OPENGL_ERROR()
     auto pointShader = program::make_program_path("vert/shaderPoints.glsl", "frag/shaderPoints.glsl");
