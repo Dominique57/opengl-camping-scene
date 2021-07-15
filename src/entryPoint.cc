@@ -15,6 +15,7 @@
 #include "temp/stb_image.h"
 #include "texture/skybox.hh"
 #include "temp/model.hh"
+#include "temp/models.hh"
 
 #define KEY_FOREWARD GLFW_KEY_W
 #define KEY_BACKWARDS GLFW_KEY_S
@@ -121,58 +122,58 @@ int run() {
 
     // build and compile shaders
     // -------------------------
-    auto* grass_shader = program::make_program_path("vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl");
-    if (!grass_shader->isready()) {
-        std::cerr << "Failed to build shader :\n" << grass_shader->getlog() << '\n';
-        delete grass_shader;
-        return 1;
-    }
-
-    auto* tree_shader = program::make_program_path("vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl");
-    if (!tree_shader->isready()) {
-        std::cerr << "Failed to build shader :\n" << tree_shader->getlog() << '\n';
-        delete tree_shader;
-        return 1;
-    }
+//    auto* grass_shader = program::make_program_path("vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl");
+//    if (!grass_shader->isready()) {
+//        std::cerr << "Failed to build shader :\n" << grass_shader->getlog() << '\n';
+//        delete grass_shader;
+//        return 1;
+//    }
+//
+//    auto* tree_shader = program::make_program_path("vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl");
+//    if (!tree_shader->isready()) {
+//        std::cerr << "Failed to build shader :\n" << tree_shader->getlog() << '\n';
+//        delete tree_shader;
+//        return 1;
+//    }
 
     // load models
     // -----------
     Model grass("textures/grass/10450_Rectangular_Grass_Patch_v1_iterations-2.obj");
     Model tree("textures/tree/TreeSet4/Tree 02/Tree.obj");
+    Models models{};
+
+    models.addModel(grass,
+                    "vert/obj_vertex_shader.glsl",
+                    "frag/obj_fragment_shader.glsl");
+
+    models.addModel(tree,
+                    "vert/obj_vertex_shader.glsl",
+                    "frag/obj_fragment_shader.glsl");
+
+
+    models.translateModel(0, glm::vec3(0.0f, -20.0f, 0.0f));
+    models.scaleModel(0, glm::vec3(0.2f, 0.2f, 0.2f));
+    models.rotateModel(0, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+
+
+    models.translateModel(1, glm::vec3(0.0f, -18.0f, 0.0f));
+    models.scaleModel(1, glm::vec3(3.0f, 3.0f, 3.0f));
+
+    TEST_OPENGL_ERROR()
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
-        grass_shader->setUniformMat4("transform_matrix", camera.getTransform(), false);
-        tree_shader->setUniformMat4("transform_matrix", camera.getTransform(), false);
-//        program->setUniformVec3("cameraPos", camera.viewCameraPos(), false);
+        models.setUniformMat4(0, "transform_matrix", camera.getTransform(), false);
+        models.setUniformMat4(1, "transform_matrix", camera.getTransform(), false);
         skyboxShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
 
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); TEST_OPENGL_ERROR()
 
-//        program->use();
-//        vao.draw();
-
         skyboxShader->use();
         skybox.draw();
 
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model, glm::vec3(0.0f, -20.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(0.2f, 0.2f, 0.2f));	// it's a bit too big for our scene, so scale it down
-        model = glm::rotate(model, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        TEST_OPENGL_ERROR()
-        grass_shader->setUniformMat4("model", model, true);
-        grass_shader->use();
-        grass.draw(grass_shader);
-
-        glm::mat4 model_tree = glm::mat4(1.0f);
-        model_tree = glm::translate(model_tree, glm::vec3(0.0f, -18.0f, 0.0f)); // translate it down so it's at the center of the scene
-        model_tree = glm::scale(model_tree, glm::vec3(3.0f, 3.0f, 3.0f));	// it's a bit too big for our scene, so scale it down
-//        model_tree = glm::rotate(model_tree, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-        TEST_OPENGL_ERROR()
-        tree_shader->setUniformMat4("model", model_tree, true);
-        tree_shader->use();
-        tree.draw(tree_shader);
+        models.draw();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -182,8 +183,8 @@ int run() {
     }
 
     glfwTerminate();
-    delete tree_shader;
-    delete grass_shader;
+//    delete tree_shader;
+//    delete grass_shader;
     delete skyboxShader;
     return 0;
 }

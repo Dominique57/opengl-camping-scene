@@ -28,6 +28,7 @@ add_library(SOURCE_LIB STATIC
     temp/lightManager.cc temp/lightManager.hh
         temp/stb_image.h temp/stb_image_implementation.cc
         texture/skybox.hh texture/skybox.cc
+        temp/models.hh temp/models.cc
         )
 target_compile_features(SOURCE_LIB PRIVATE
     cxx_std_17
