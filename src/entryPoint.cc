@@ -96,7 +96,7 @@ int run() {
     skybox.bindToProgram(*skyboxShader);
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-    stbi_set_flip_vertically_on_load(true);
+//    stbi_set_flip_vertically_on_load(true);
 
     // load models
     Model grass("textures/grass/10450_Rectangular_Grass_Patch_v1_iterations-2.obj",
