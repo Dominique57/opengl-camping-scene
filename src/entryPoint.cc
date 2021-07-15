@@ -103,7 +103,7 @@ int run() {
     Model grass("textures/grass/10450_Rectangular_Grass_Patch_v1_iterations-2.obj",
                 "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
                 {1, 0.1, 32});
-    Model tree("textures/tree/TreeSet4/Tree 02/Tree.obj",
+    Model tree("textures/tree/Tree.obj",
                "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
                {0.8, 0.8, 256});
     Model bench("textures/bench/Lawka 2 - model.obj",
