@@ -4,8 +4,9 @@
 #include <random>
 
 FireworkEmitter::FireworkEmitter(const glm::vec3 &position, const glm::vec3 &color,
-                                 float rescaleFactor)
-    : vaoId(0), emitterPos(position), particleColor(color), rescaleFactor(rescaleFactor) {
+                                 float rescaleFactor, LightManager &lightmanager)
+    : vaoId(0), emitterPos(position), particleColor(color),
+      rescaleFactor(rescaleFactor), lightmanager(lightmanager) {
     glGenVertexArrays(1, &vaoId); TEST_OPENGL_ERROR()
     glBindVertexArray(vaoId); TEST_OPENGL_ERROR()
 
@@ -47,6 +48,23 @@ void FireworkEmitter::bind(const program &program) {
 }
 
 void FireworkEmitter::update(double timePassed) {
+    for (auto i = 0U; i < lights.size(); ++i) {
+        lights[i].life -= 0.005;
+        auto& lightRessource = lightmanager.getLight(lights[i].lightId);
+        lightRessource.lightColor = glm::clamp(
+                glm::lerp(glm::vec3(0), lightRessource.lightColor, lights[i].life),
+                glm::vec3(0), glm::vec3(0.3));
+
+        if (lights[i].life <= 0) {
+            lightmanager.removeLight(lights[i].lightId);
+            lights[i] = lights.back();
+            lights.pop_back();
+            i -= 1;
+            continue;
+        }
+    }
+    lightmanager.updateLights();
+
     for (auto i = 0U; i < points.size(); ++i) {
         // If dead, remove the object with fast non-ordered deletion
         if (points[i].lifeLeft <= 0) {
@@ -115,4 +133,9 @@ void FireworkEmitter::emit(unsigned count) {
         particle.color = particleColor;
         points.push_back(particle);
     }
+    lights.emplace_back(FireWorkLight {
+         lightmanager.addLight(emitterPos, particleColor * 0.1f),
+         1.1f
+    });
+    lightmanager.updateLights();
 }
