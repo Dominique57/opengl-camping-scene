@@ -23,7 +23,7 @@
 #define KEY_DOWN GLFW_KEY_LEFT_CONTROL
 
 GLFWwindow* window = nullptr;
-Camera camera(5, 30, 0);
+Camera camera(10, -10, 30);
 void handleKey(GLFWwindow* window, int key, int, int, int) {
     glm::vec3 moveOffset{ 0, 0, 0 };
     if (key == KEY_FOREWARD) {
@@ -73,7 +73,7 @@ int run() {
     glfwSetCursorPos(window, (double)screen_w / 2, (double)screen_h / 2);
 
     auto lightManager = LightManager();
-//    lightManager.addLight(camera.viewCameraPos(), { 1, 1, 1 });
+    lightManager.addLight(camera.viewCameraPos(), { 1, 1, 1 });
     lightManager.updateLights();
 
     std::vector<std::string> faces
@@ -108,6 +108,8 @@ int run() {
     // -----------
     Model grass("textures/grass/10450_Rectangular_Grass_Patch_v1_iterations-2.obj");
     Model tree("textures/tree/TreeSet4/Tree 02/Tree.obj");
+    Model bench("textures/bench/Lawka 2 - model.obj");
+    Model firewood("textures/firewood/Bonfire model 1.obj");
     Models models{};
 
     models.addModel(grass,
@@ -118,6 +120,14 @@ int run() {
                     "vert/obj_vertex_shader.glsl",
                     "frag/obj_fragment_shader.glsl");
 
+    models.addModel(bench,
+                    "vert/obj_vertex_shader.glsl",
+                    "frag/obj_fragment_shader.glsl");
+
+    models.addModel(firewood,
+                    "vert/obj_vertex_shader.glsl",
+                    "frag/obj_fragment_shader.glsl");
+
 
     // tweak models
     // -----------
@@ -125,8 +135,15 @@ int run() {
     models.scaleModel(0, glm::vec3(1.f, 0.2f, 1.f));
     models.rotateModel(0, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
-    models.translateModel(1, glm::vec3(0.0f, -18.0f, 0.0f));
-    models.scaleModel(1, glm::vec3(3.0f, 3.0f, 3.0f));
+    models.translateModel(1, glm::vec3(-3.0f, -18.0f, 0.0f));
+    models.scaleModel(1, glm::vec3(5.0f, 5.0f, 5.0f));
+
+    models.translateModel(2, glm::vec3(5.0f, -18.0f, -10.0f));
+    models.scaleModel(2, glm::vec3(0.5f, 0.5f, 0.5f));
+    models.rotateModel(2, -20.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+
+    models.translateModel(3, glm::vec3(10.0f, -18.0f, 0.0f));
+    models.scaleModel(3, glm::vec3(2.0f, 2.0f, 2.0f));
 
     TEST_OPENGL_ERROR()
     auto pointShader = program::make_program_path("vert/shaderPoints.glsl", "frag/shaderPoints.glsl");
@@ -134,7 +151,7 @@ int run() {
         std::cerr << pointShader->getlog();
         return 1;
     }
-    auto firePlace = FirePlace({ 10, -18, 0 }, 3.f, lightManager);
+    auto firePlace = FirePlace({ 10, -17, 0 }, 3.f, lightManager);
     firePlace.bind(*pointShader);
 
     /* Loop until the user closes the window */
@@ -143,6 +160,10 @@ int run() {
         models.setUniformMat4(0, "view_matrix", camera.getView(), false);
         models.setUniformMat4(1, "transform_matrix", camera.getTransform(), false);
         models.setUniformMat4(1, "view_matrix", camera.getView(), false);
+        models.setUniformMat4(2, "transform_matrix", camera.getTransform(), false);
+        models.setUniformMat4(2, "view_matrix", camera.getView(), false);
+        models.setUniformMat4(3, "transform_matrix", camera.getTransform(), false);
+        models.setUniformMat4(3, "view_matrix", camera.getView(), false);
         skyboxShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
         pointShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
 
