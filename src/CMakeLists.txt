@@ -26,10 +26,13 @@ add_library(SOURCE_LIB STATIC
     wrappers/wrapper.cc wrappers/wrapper.hh
     temp/vao.cc temp/vao.hh
     temp/lightManager.cc temp/lightManager.hh
-        temp/stb_image.h temp/stb_image_implementation.cc
-        texture/skybox.hh texture/skybox.cc
-        temp/models.hh temp/models.cc
-        )
+    temp/stb_image.h temp/stb_image_implementation.cc
+    texture/skybox.hh texture/skybox.cc
+    temp/models.hh temp/models.cc
+    temp/particleEmitter.cc temp/particleEmitter.hh
+    temp/firePlace.cc temp/firePlace.hh
+    )
+
 target_compile_features(SOURCE_LIB PRIVATE
     cxx_std_17
     )

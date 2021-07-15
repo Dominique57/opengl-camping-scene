@@ -23,6 +23,8 @@ public:
 
     const glm::vec3& viewFrontVec() const { return frontVect; }
 
+    void alterMovementSpeed(float percentage) { movementSpeed = movementSpeed * percentage; }
+
 protected:
     glm::vec3 computeRightVect() const {
         return glm::normalize(glm::cross(frontVect, {0, 1, 0}));
