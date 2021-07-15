@@ -16,5 +16,6 @@ public:
 protected:
     glm::vec3 pos;
     ParticleEmitter particleEmitter;
+    unsigned lightId;
     LightManager &lightManager;
 };

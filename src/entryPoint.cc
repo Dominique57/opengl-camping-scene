@@ -4,16 +4,12 @@
 #include "wrappers/glmWrapper.hh"
 #include "wrappers/glWrapper.hh"
 #include <GLFW/glfw3.h>
-#include <glm/gtc/type_ptr.hpp>
 #include <vector>
-#include <temp/vao.hh>
 #include <temp/lightManager.hh>
-#include <temp/particleEmitter.hh>
 #include <temp/firePlace.hh>
 #include "temp/camera.hh"
 #include "temp/init_gl.hh"
 #include "temp/program.hh"
-#include "temp/objLoader.hh"
 #include "temp/stb_image.h"
 #include "texture/skybox.hh"
 #include "temp/model.hh"
@@ -27,7 +23,7 @@
 #define KEY_DOWN GLFW_KEY_LEFT_CONTROL
 
 GLFWwindow* window = nullptr;
-Camera camera(0, -15, 20);
+Camera camera(5, 30, 0);
 void handleKey(GLFWwindow* window, int key, int, int, int) {
     glm::vec3 moveOffset{ 0, 0, 0 };
     if (key == KEY_FOREWARD) {
@@ -77,8 +73,7 @@ int run() {
     glfwSetCursorPos(window, (double)screen_w / 2, (double)screen_h / 2);
 
     auto lightManager = LightManager();
-    lightManager.addLight({ 0, 2, 30 }, { 1, 1, 1 });
-    lightManager.addLight({ 0, 2, -30 }, { 0.8, 0.1, 0.1 });
+//    lightManager.addLight(camera.viewCameraPos(), { 1, 1, 1 });
     lightManager.updateLights();
 
     std::vector<std::string> faces
@@ -127,7 +122,7 @@ int run() {
     // tweak models
     // -----------
     models.translateModel(0, glm::vec3(0.0f, -20.0f, 0.0f));
-    models.scaleModel(0, glm::vec3(0.2f, 0.2f, 0.2f));
+    models.scaleModel(0, glm::vec3(1.f, 0.2f, 1.f));
     models.rotateModel(0, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
     models.translateModel(1, glm::vec3(0.0f, -18.0f, 0.0f));
@@ -145,7 +140,9 @@ int run() {
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
         models.setUniformMat4(0, "transform_matrix", camera.getTransform(), false);
+        models.setUniformMat4(0, "view_matrix", camera.getView(), false);
         models.setUniformMat4(1, "transform_matrix", camera.getTransform(), false);
+        models.setUniformMat4(1, "view_matrix", camera.getView(), false);
         skyboxShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
         pointShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
 
