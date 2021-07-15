@@ -81,6 +81,7 @@ program* program::make_program(
 
 void program::setUniformMat4(const char *name,
         const glm::mat4& val, bool throwIfMissing) const {
+//    TEST_OPENGL_ERROR()
     GLint eltLoc = glGetUniformLocSafe(program_, name);
     if (eltLoc != -1) {
         glProgramUniformMatrix4fv(program_, eltLoc, 1, GL_FALSE, &val[0][0]); TEST_OPENGL_ERROR()

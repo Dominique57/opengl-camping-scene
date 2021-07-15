@@ -44,6 +44,7 @@ target_link_libraries(SOURCE_LIB
     glfw
     ${OPENGL_LIBRARIES}
     ${GLEW_LIBRARIES}
+        assimp
     )
 target_include_directories(SOURCE_LIB PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}

@@ -65,6 +65,7 @@ void linkShader(GLuint program, std::initializer_list<GLuint> shaders) {
 
 GLint glGetUniformLocSafe(GLuint program, const char* name) {
     GLint res = glGetUniformLocation(program, name); TEST_OPENGL_ERROR()
+    std::cerr << program << " " << name << " " << res << std::endl;
     if (res < 0) {
         auto msg = std::string("Requested uniform `") + name
             + "` not found !";
