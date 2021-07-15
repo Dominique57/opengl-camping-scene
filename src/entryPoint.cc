@@ -64,7 +64,6 @@ int run() {
 
     // Input callbacks
     glfwSetKeyCallback(window, handleKey);
-//    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, handleMouseMove);
     glfwSetScrollCallback(window, handleScroll);
     // Reset cursor to center of the screen
@@ -73,18 +72,17 @@ int run() {
     glfwSetCursorPos(window, (double)screen_w / 2, (double)screen_h / 2);
 
     auto lightManager = LightManager();
-    lightManager.addLight(camera.viewCameraPos(), { 1, 1, 1 });
+//    lightManager.addLight(camera.viewCameraPos(), { 1, 1, 1 });
     lightManager.updateLights();
 
-    std::vector<std::string> faces
-            {
-                    "textures/skybox/grimm_night/right.png",
-                    "textures/skybox/grimm_night/left.png",
-                    "textures/skybox/grimm_night/top.png",
-                    "textures/skybox/grimm_night/bottom.png",
-                    "textures/skybox/grimm_night/front.png",
-                    "textures/skybox/grimm_night/back.png"
-            };
+    std::vector<std::string> faces {
+            "textures/skybox/grimm_night/right.png",
+            "textures/skybox/grimm_night/left.png",
+            "textures/skybox/grimm_night/top.png",
+            "textures/skybox/grimm_night/bottom.png",
+            "textures/skybox/grimm_night/front.png",
+            "textures/skybox/grimm_night/back.png"
+    };
 
     // skybox VAO
     Skybox skybox{faces};
@@ -100,33 +98,25 @@ int run() {
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     stbi_set_flip_vertically_on_load(true);
 
-    // configure global opengl state
-    // -----------------------------
-    glEnable(GL_DEPTH_TEST);
-
     // load models
-    // -----------
-    Model grass("textures/grass/10450_Rectangular_Grass_Patch_v1_iterations-2.obj");
-    Model tree("textures/tree/TreeSet4/Tree 02/Tree.obj");
-    Model bench("textures/bench/Lawka 2 - model.obj");
-    Model firewood("textures/firewood/Bonfire model 1.obj");
+    Model grass("textures/grass/10450_Rectangular_Grass_Patch_v1_iterations-2.obj",
+                "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
+                {1, 0.1, 32});
+    Model tree("textures/tree/TreeSet4/Tree 02/Tree.obj",
+               "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
+               {0.8, 0.8, 256});
+    Model bench("textures/bench/Lawka 2 - model.obj",
+                "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
+                {0.8, 0.8, 256});
+    Model firewood("textures/firewood/Bonfire model 1.obj",
+                   "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
+                   {0.8, 0.8, 256});
+
     Models models{};
-
-    models.addModel(grass,
-                    "vert/obj_vertex_shader.glsl",
-                    "frag/obj_fragment_shader.glsl");
-
-    models.addModel(tree,
-                    "vert/obj_vertex_shader.glsl",
-                    "frag/obj_fragment_shader.glsl");
-
-    models.addModel(bench,
-                    "vert/obj_vertex_shader.glsl",
-                    "frag/obj_fragment_shader.glsl");
-
-    models.addModel(firewood,
-                    "vert/obj_vertex_shader.glsl",
-                    "frag/obj_fragment_shader.glsl");
+    models.addModel(grass);
+    models.addModel(tree);
+    models.addModel(bench);
+    models.addModel(firewood);
 
 
     // tweak models

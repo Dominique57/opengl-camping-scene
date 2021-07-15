@@ -22,16 +22,26 @@
 class Model
 {
 public:
-    Model(const char *path)
-    {
+    Model(const char *path, const char *vertex_path, const char *frag_path, const glm::vec3 &textureCoef) {
         loadModel(path);
+        program_ = program::make_program_path(vertex_path, frag_path);
+        if (!program_->isready()) {
+            std::cerr << "Failed to build shader :\n" << program_->getlog() << '\n';
+            delete program_;
+        }
+        program_->setUniformVec3("texture_coef", textureCoef, true);
     }
-    void draw(program *program);
+
+    void draw();
+
+    program* getProgram() { return program_; }
+
 private:
     // model data
     std::vector<Texture> textures_loaded;
     std::vector<Mesh> meshes;
     std::string directory;
+    program *program_;
 
     void loadModel(const std::string& path);
 

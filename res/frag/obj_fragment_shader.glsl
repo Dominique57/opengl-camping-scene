@@ -13,6 +13,7 @@ layout(std430, binding = 0) buffer Lights {
     Light lights[];
 };
 
+uniform vec3 texture_coef;
 uniform vec3 cameraPos;
 uniform mat4 view_matrix;
 uniform sampler2D texture_diffuse1;
@@ -23,12 +24,13 @@ in vec3 fragPos;
 
 out vec4 out_color;
 
-float diffusionFactor = 0.8;
-float specularFactor = 0.8;
-float specularShininess = 265;
 float ambiantFactor = 0.05;
 
 vec3 computeDiffuseAndSpecular(vec3 objectColor) {
+    float diffusionFactor = texture_coef.x;
+    float specularFactor = texture_coef.y;
+    float specularShininess = texture_coef.z;
+
     vec3 resColor = vec3(0);
 
     for (int i = 0; i < lightsLength; ++i) {

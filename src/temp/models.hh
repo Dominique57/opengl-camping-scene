@@ -8,7 +8,6 @@
 
 struct ModelData {
     Model &model_;
-    program *program_;
     glm::mat4 model_transform_;
 };
 
@@ -18,9 +17,7 @@ public:
     Models() = default;
     ~Models() = default;
 
-    bool addModel(Model &model,
-                  const std::string& vertex_path,
-                  const std::string& frag_path);
+    bool addModel(Model &model);
 
     void translateModel(int index, glm::vec3 translation);
     void rotateModel(int index, float angleInDegree, glm::vec3 axis);

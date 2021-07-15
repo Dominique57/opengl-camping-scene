@@ -4,10 +4,9 @@
 
 #include "model.hh"
 
-void Model::draw(program *program)
-{
+void Model::draw() {
     for(auto & meshe : meshes)
-        meshe.draw(program);
+        meshe.draw(program_);
 }
 
 void Model::loadModel(const std::string& path)
