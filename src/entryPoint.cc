@@ -8,6 +8,8 @@
 #include <vector>
 #include <temp/vao.hh>
 #include <temp/lightManager.hh>
+#include <temp/particleEmitter.hh>
+#include <temp/firePlace.hh>
 #include "temp/camera.hh"
 #include "temp/init_gl.hh"
 #include "temp/program.hh"
@@ -25,7 +27,7 @@
 #define KEY_DOWN GLFW_KEY_LEFT_CONTROL
 
 GLFWwindow* window = nullptr;
-Camera camera(0, 0, 20);
+Camera camera(0, -15, 20);
 void handleKey(GLFWwindow* window, int key, int, int, int) {
     glm::vec3 moveOffset{ 0, 0, 0 };
     if (key == KEY_FOREWARD) {
@@ -56,6 +58,9 @@ void handleMouseMove(GLFWwindow* window, double xpos, double ypos) {
     glfwSetCursorPos(window, (double)screen_w / 2, (double)screen_h / 2);
 }
 
+void handleScroll(GLFWwindow*, double, double yoffset) {
+    camera.alterMovementSpeed(yoffset / 10. + 1.f);
+}
 
 int run() {
     if (!initOpenglAndContext(window))
@@ -65,14 +70,15 @@ int run() {
     glfwSetKeyCallback(window, handleKey);
 //    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, handleMouseMove);
+    glfwSetScrollCallback(window, handleScroll);
     // Reset cursor to center of the screen
     int screen_w, screen_h;
     glfwGetWindowSize(window, &screen_w, &screen_h);
     glfwSetCursorPos(window, (double)screen_w / 2, (double)screen_h / 2);
 
     auto lightManager = LightManager();
-    auto l1 = lightManager.addLight({ 0, 2, 30 }, { 1, 1, 1 });
-    auto l2 = lightManager.addLight({ 0, 2, -30 }, { 0.8, 0.1, 0.1 });
+    lightManager.addLight({ 0, 2, 30 }, { 1, 1, 1 });
+    lightManager.addLight({ 0, 2, -30 }, { 0.8, 0.1, 0.1 });
     lightManager.updateLights();
 
     std::vector<std::string> faces
@@ -91,7 +97,6 @@ int run() {
     auto* skyboxShader = program::make_program_path("vert/vert_skybox.glsl", "frag/frag_skybox.glsl");
     if (!skyboxShader->isready()) {
         std::cerr << "Failed to build shader :\n" << skyboxShader->getlog() << '\n';
-        delete skyboxShader;
         return 1;
     }
     skyboxShader->use();
@@ -129,12 +134,20 @@ int run() {
     models.scaleModel(1, glm::vec3(3.0f, 3.0f, 3.0f));
 
     TEST_OPENGL_ERROR()
+    auto pointShader = program::make_program_path("vert/shaderPoints.glsl", "frag/shaderPoints.glsl");
+    if (!pointShader->isready()) {
+        std::cerr << pointShader->getlog();
+        return 1;
+    }
+    auto firePlace = FirePlace({ 10, -18, 0 }, 3.f, lightManager);
+    firePlace.bind(*pointShader);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
         models.setUniformMat4(0, "transform_matrix", camera.getTransform(), false);
         models.setUniformMat4(1, "transform_matrix", camera.getTransform(), false);
         skyboxShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
+        pointShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
 
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); TEST_OPENGL_ERROR()
@@ -144,6 +157,10 @@ int run() {
 
         models.draw();
 
+        pointShader->use();
+        firePlace.update();
+        firePlace.draw();
+
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
 
@@ -152,8 +169,5 @@ int run() {
     }
 
     glfwTerminate();
-//    delete tree_shader;
-//    delete grass_shader;
-    delete skyboxShader;
     return 0;
 }
