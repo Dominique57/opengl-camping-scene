@@ -33,7 +33,7 @@ protected:
     }
 
 private:
-    GLfloat movementSpeed = 0.1;
+    GLfloat movementSpeed = 0.25;
     GLfloat mouseSpeed = 0.05;
 
     glm::vec3 cameraPos;
