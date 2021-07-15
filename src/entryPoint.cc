@@ -4,6 +4,7 @@
 #include "wrappers/glmWrapper.hh"
 #include "wrappers/glWrapper.hh"
 #include <GLFW/glfw3.h>
+#include <glm/gtc/type_ptr.hpp>
 #include <vector>
 #include <temp/vao.hh>
 #include <temp/lightManager.hh>
@@ -13,6 +14,7 @@
 #include "temp/objLoader.hh"
 #include "temp/stb_image.h"
 #include "texture/skybox.hh"
+#include "temp/model.hh"
 
 #define KEY_FOREWARD GLFW_KEY_W
 #define KEY_BACKWARDS GLFW_KEY_S
@@ -68,20 +70,20 @@ int run() {
     glfwSetCursorPos(window, (double)screen_w / 2, (double)screen_h / 2);
 
     /* Make the window's context current */
-    auto* program = program::make_program_path("vert/shader2.glsl", "frag/shader2.glsl");
-    if (!program->isready()) {
-        std::cerr << "Failed to build shader :\n" << program->getlog() << '\n';
-        delete program;
-        return 1;
-    }
-    program->use();
+//    auto* program = program::make_program_path("vert/shader2.glsl", "frag/shader2.glsl");
+//    if (!program->isready()) {
+//        std::cerr << "Failed to build shader :\n" << program->getlog() << '\n';
+//        delete program;
+//        return 1;
+//    }
+//    program->use();
 
-    auto objLoader = ObjLoader();
-//    auto objData = objLoader.loadObj("cube.obj");
-    auto objData = objLoader.loadObj("teapot_norm.obj");
-    auto vao = Vao();
-    vao.addObjData(objData);
-    vao.bindToProgram(*program, "vPosition", "vNormal");
+//    auto objLoader = ObjLoader();
+////    auto objData = objLoader.loadObj("cube.obj");
+//    auto objData = objLoader.loadObj("teapot_norm.obj");
+//    auto vao = Vao();
+//    vao.addObjData(objData);
+//    vao.bindToProgram(*program, "vPosition", "vNormal");
 
     auto lightManager = LightManager();
     auto l1 = lightManager.addLight({ 0, 2, 30 }, { 1, 1, 1 });
@@ -90,12 +92,12 @@ int run() {
 
     std::vector<std::string> faces
             {
-                    "skybox/grimm_night/right.png",
-                    "skybox/grimm_night/left.png",
-                    "skybox/grimm_night/top.png",
-                    "skybox/grimm_night/bottom.png",
-                    "skybox/grimm_night/front.png",
-                    "skybox/grimm_night/back.png"
+                    "textures/skybox/grimm_night/right.png",
+                    "textures/skybox/grimm_night/left.png",
+                    "textures/skybox/grimm_night/top.png",
+                    "textures/skybox/grimm_night/bottom.png",
+                    "textures/skybox/grimm_night/front.png",
+                    "textures/skybox/grimm_night/back.png"
             };
 
     // skybox VAO
@@ -110,20 +112,51 @@ int run() {
     skyboxShader->use();
     skybox.bindToProgram(*skyboxShader);
 
+    // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
+    stbi_set_flip_vertically_on_load(true);
+
+    // configure global opengl state
+    // -----------------------------
+    glEnable(GL_DEPTH_TEST);
+
+    // build and compile shaders
+    // -------------------------
+    auto* program = program::make_program_path("vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl");
+    if (!program->isready()) {
+        std::cerr << "Failed to build shader :\n" << program->getlog() << '\n';
+        delete program;
+        return 1;
+    }
+    program->use();
+
+    // load models
+    // -----------
+    Model ourModel("textures/backpack/backpack.obj");
+    Model robot("textures/nanosuit/nanosuit.blend");
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
-        program->setUniformMat4("transform_matrix", camera.getTransform(), true);
-        program->setUniformVec3("cameraPos", camera.viewCameraPos(), false);
+        program->setUniformMat4("transform_matrix", camera.getTransform(), false);
+//        program->setUniformVec3("cameraPos", camera.viewCameraPos(), false);
         skyboxShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
 
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); TEST_OPENGL_ERROR()
 
-        program->use();
-        vao.draw();
+//        program->use();
+//        vao.draw();
 
         skyboxShader->use();
         skybox.draw();
+
+        glm::mat4 model = glm::mat4(1.0f);
+        model = glm::translate(model, glm::vec3(0.0f, 0.0f, 0.0f)); // translate it down so it's at the center of the scene
+        model = glm::scale(model, glm::vec3(1.0f, 1.0f, 1.0f));	// it's a bit too big for our scene, so scale it down
+        TEST_OPENGL_ERROR()
+        program->setUniformMat4("model", model, true);
+        program->use();
+        ourModel.draw(program);
+        robot.draw(program);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

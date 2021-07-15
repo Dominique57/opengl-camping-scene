@@ -18,6 +18,8 @@ add_library(SOURCE_LIB STATIC
     temp/init_gl.cc temp/init_gl.hh
     temp/objLoader.cc temp/objLoader.hh
     temp/program.cc temp/program.hh
+        temp/mesh.cc temp/mesh.hh
+        temp/model.cc temp/model.hh
 
     wrappers/glWrapper.cc wrappers/glWrapper.hh
     wrappers/glmWrapper.hh
@@ -42,6 +44,7 @@ target_link_libraries(SOURCE_LIB
     glfw
     ${OPENGL_LIBRARIES}
     ${GLEW_LIBRARIES}
+        assimp
     )
 target_include_directories(SOURCE_LIB PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}
