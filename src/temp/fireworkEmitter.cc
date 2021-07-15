@@ -135,7 +135,7 @@ void FireworkEmitter::emit(unsigned count) {
     }
     lights.emplace_back(FireWorkLight {
          lightmanager.addLight(emitterPos, particleColor * 0.1f),
-         1.1f
+         0.99f
     });
     lightmanager.updateLights();
 }
