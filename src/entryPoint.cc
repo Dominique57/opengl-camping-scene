@@ -113,27 +113,27 @@ int run() {
                    {0.8, 0.8, 256});
 
     Models models{};
-    models.addModel(grass);
-    models.addModel(tree);
-    models.addModel(bench);
-    models.addModel(firewood);
+    auto grass_id1 = models.addModel(grass);
+    auto tree_id1 = models.addModel(tree);
+    auto bench_id1 = models.addModel(bench);
+    auto firewood_id1 = models.addModel(firewood);
 
 
     // tweak models
     // -----------
-    models.translateModel(0, glm::vec3(0.0f, -20.0f, 0.0f));
-    models.scaleModel(0, glm::vec3(1.f, 0.2f, 1.f));
-    models.rotateModel(0, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+    models.translateModel(grass_id1, glm::vec3(0.0f, -20.0f, 0.0f));
+    models.scaleModel(grass_id1, glm::vec3(1.f, 0.2f, 1.f));
+    models.rotateModel(grass_id1, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
-    models.translateModel(1, glm::vec3(-3.0f, -18.0f, 0.0f));
-    models.scaleModel(1, glm::vec3(5.0f, 5.0f, 5.0f));
+    models.translateModel(tree_id1, glm::vec3(-3.0f, -18.0f, 0.0f));
+    models.scaleModel(tree_id1, glm::vec3(5.0f, 5.0f, 5.0f));
 
-    models.translateModel(2, glm::vec3(5.0f, -18.0f, -10.0f));
-    models.scaleModel(2, glm::vec3(0.5f, 0.5f, 0.5f));
-    models.rotateModel(2, -20.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    models.translateModel(bench_id1, glm::vec3(5.0f, -18.0f, -10.0f));
+    models.scaleModel(bench_id1, glm::vec3(0.5f, 0.5f, 0.5f));
+    models.rotateModel(bench_id1, -20.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
-    models.translateModel(3, glm::vec3(10.0f, -18.0f, 0.0f));
-    models.scaleModel(3, glm::vec3(2.0f, 2.0f, 2.0f));
+    models.translateModel(firewood_id1, glm::vec3(10.0f, -18.0f, 0.0f));
+    models.scaleModel(firewood_id1, glm::vec3(2.0f, 2.0f, 2.0f));
 
     TEST_OPENGL_ERROR()
     auto pointShader = program::make_program_path("vert/shaderPoints.glsl", "frag/shaderPoints.glsl");
@@ -146,14 +146,8 @@ int run() {
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
-        models.setUniformMat4(0, "transform_matrix", camera.getTransform(), false);
-        models.setUniformMat4(0, "view_matrix", camera.getView(), false);
-        models.setUniformMat4(1, "transform_matrix", camera.getTransform(), false);
-        models.setUniformMat4(1, "view_matrix", camera.getView(), false);
-        models.setUniformMat4(2, "transform_matrix", camera.getTransform(), false);
-        models.setUniformMat4(2, "view_matrix", camera.getView(), false);
-        models.setUniformMat4(3, "transform_matrix", camera.getTransform(), false);
-        models.setUniformMat4(3, "view_matrix", camera.getView(), false);
+        models.setUniformMat4("transform_matrix", camera.getTransform(), false);
+        models.setUniformMat4("view_matrix", camera.getView(), false);
         skyboxShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
         pointShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
 

@@ -4,10 +4,10 @@
 
 #include "models.hh"
 
-bool Models::addModel(Model &model)
+int Models::addModel(Model &model)
 {
     modelsData_.push_back(ModelData{model, glm::mat4(1.0f)});
-    return true;
+    return modelsData_.size() - 1;
 }
 
 void Models::translateModel(int index, glm::vec3 translation)
@@ -37,10 +37,16 @@ void Models::draw() {
     }
 }
 
-void Models::setUniformMat4(int index,
-                            const char *name,
+void Models::setUniformMat4(int index, const char *name,
                             const glm::mat4 &val,
                             bool throwIfMissing) const
 {
     modelsData_.at(index).model_.getProgram()->setUniformMat4(name, val, throwIfMissing);
+}
+
+void Models::setUniformMat4(const char *name, const glm::mat4 &val,
+                            bool throwIfMissing) const
+{
+    for (auto &model : modelsData_)
+        model.model_.getProgram()->setUniformMat4(name, val ,throwIfMissing);
 }
