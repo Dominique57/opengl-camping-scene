@@ -4,17 +4,9 @@
 
 #include "models.hh"
 
-bool Models::addModel(Model &model,
-                      const std::string &vertex_path,
-                      const std::string &frag_path)
+bool Models::addModel(Model &model)
 {
-    auto* program = program::make_program_path(vertex_path, frag_path);
-    if (!program->isready()) {
-        std::cerr << "Failed to build shader :\n" << program->getlog() << '\n';
-        delete program;
-        return false;
-    }
-    modelsData_.push_back(ModelData{model, program, glm::mat4(1.0f)});
+    modelsData_.push_back(ModelData{model, glm::mat4(1.0f)});
     return true;
 }
 
@@ -37,12 +29,11 @@ void Models::scaleModel(int index, glm::vec3 scale)
                                                         scale);
 }
 
-void Models::draw()
-{
+void Models::draw() {
     for (auto modelData : modelsData_) {
-        modelData.program_->setUniformMat4("model", modelData.model_transform_, true);
-        modelData.program_->use();
-        modelData.model_.draw(modelData.program_);
+        modelData.model_.getProgram()->setUniformMat4("model", modelData.model_transform_, true);
+        modelData.model_.getProgram()->use();
+        modelData.model_.draw();
     }
 }
 
@@ -51,5 +42,5 @@ void Models::setUniformMat4(int index,
                             const glm::mat4 &val,
                             bool throwIfMissing) const
 {
-    modelsData_.at(index).program_->setUniformMat4(name, val, throwIfMissing);
+    modelsData_.at(index).model_.getProgram()->setUniformMat4(name, val, throwIfMissing);
 }
