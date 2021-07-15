@@ -12,6 +12,12 @@
             << __FILE__ << ":" <<  __LINE__ << std::endl; \
   }
 
+#define IGNORE_OPENGL_ERROR()   {   \
+    GLenum err;                     \
+    while ((err = glGetError()) == GL_NO_ERROR) \
+        continue;                   \
+    }
+
 std::vector<GLchar> getShaderLog(GLint shader);
 std::vector<GLchar> getProgramLog(GLint program);
 

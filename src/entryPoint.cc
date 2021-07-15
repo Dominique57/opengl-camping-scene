@@ -10,7 +10,6 @@
 #include "temp/camera.hh"
 #include "temp/init_gl.hh"
 #include "temp/program.hh"
-#include "temp/stb_image.h"
 #include "texture/skybox.hh"
 #include "temp/model.hh"
 #include "temp/models.hh"
@@ -40,6 +39,8 @@ void handleKey(GLFWwindow* window, int key, int, int, int) {
         moveOffset.y = -1;
     } else if (key == GLFW_KEY_ESCAPE) {
         glfwSetWindowShouldClose(window, true);
+    } else if (key == GLFW_KEY_P) {
+        std::cout << "[CAMERA position]: " << camera.viewCameraPos() << std::endl;
     }
 
     camera.moveCamera(moveOffset);
@@ -115,6 +116,7 @@ int run() {
     Models models{};
     auto grass_id1 = models.addModel(grass);
     auto tree_id1 = models.addModel(tree);
+    auto tree_id2 = models.addModel(tree);
     auto bench_id1 = models.addModel(bench);
     auto firewood_id1 = models.addModel(firewood);
 
