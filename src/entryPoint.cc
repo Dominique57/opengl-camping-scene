@@ -119,7 +119,7 @@ int run() {
                    {0.8, 0.8, 256});
     stbi_set_flip_vertically_on_load(false);
 
-    Model car("textures/car2/RV Trailer Truck/RV Trailer Truck doors open.obj",
+    Model car("textures/car/RV Trailer Truck doors open.obj",
                    "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
                    {0.8, 0.8, 256});
 
