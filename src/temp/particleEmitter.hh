@@ -5,18 +5,15 @@
 #include "wrappers/glmWrapper.hh"
 #include "program.hh"
 
-struct ParticleRender {
-    glm::vec3 position;
-    glm::vec3 color;
-    GLfloat size;
-    GLfloat lifeLeft = 1.f;
-
-    bool operator<(const ParticleRender &particle) {
-        return position.z < particle.position.z;
-    }
-};
 
 class ParticleEmitter {
+public:
+    struct ParticleRender {
+        glm::vec3 position;
+        glm::vec3 color;
+        GLfloat size;
+        GLfloat lifeLeft = 1.f;
+    };
 public:
     explicit ParticleEmitter(const glm::vec3 &position, float rescaleFactor);
     void bind(const program &program);

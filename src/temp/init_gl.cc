@@ -35,7 +35,7 @@ bool initGlfw(GLFWwindow* &window) {
         return false;
     }
 
-    window = glfwCreateWindow(1080, 720, "Hello World", NULL, NULL);
+    window = glfwCreateWindow(1920, 1080, "Hello World", NULL, NULL);
     if (!window) {
         std::cerr << "Glfw windows creation failed !\n";
         return false;

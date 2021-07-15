@@ -18,8 +18,8 @@ add_library(SOURCE_LIB STATIC
     temp/init_gl.cc temp/init_gl.hh
     temp/objLoader.cc temp/objLoader.hh
     temp/program.cc temp/program.hh
-        temp/mesh.cc temp/mesh.hh
-        temp/model.cc temp/model.hh
+    temp/mesh.cc temp/mesh.hh
+    temp/model.cc temp/model.hh
 
     wrappers/glWrapper.cc wrappers/glWrapper.hh
     wrappers/glmWrapper.hh
@@ -30,6 +30,7 @@ add_library(SOURCE_LIB STATIC
     texture/skybox.hh texture/skybox.cc
     temp/models.hh temp/models.cc
     temp/particleEmitter.cc temp/particleEmitter.hh
+    temp/fireworkEmitter.cc temp/fireWorkEmitter.hh
     temp/firePlace.cc temp/firePlace.hh
     )
 
