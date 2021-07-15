@@ -139,8 +139,8 @@ int run() {
     models.scaleModel(grass_id1, glm::vec3(1.f, 0.2f, 1.f));
     models.rotateModel(grass_id1, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
-//    models.translateModel(tree_id1, glm::vec3(-3.0f, -18.0f, 0.0f));
-//    models.scaleModel(tree_id1, glm::vec3(5.0f, 5.0f, 5.0f));
+    models.translateModel(tree_id1, glm::vec3(-3.0f, -18.0f, 0.0f));
+    models.scaleModel(tree_id1, glm::vec3(5.0f, 5.0f, 5.0f));
 
     models.translateModel(bench_id1, glm::vec3(5.0f, -18.0f, -10.0f));
     models.scaleModel(bench_id1, glm::vec3(0.5f, 0.5f, 0.5f));
@@ -176,7 +176,7 @@ int run() {
     }
     auto firePlace = FirePlace({ 10, -17, 0 }, 3.f, lightManager);
     firePlace.bind(*pointShader);
-    auto fireworkEmitter = FireworkEmitter({5, -2, 40}, {0, 0, 1}, 1.f);
+    auto fireworkEmitter = FireworkEmitter({5, -2, 40}, {0, 0, 1}, 1.f, lightManager);
     fireworkEmitter.bind(*pointShader);
 
     /* Loop until the user closes the window */

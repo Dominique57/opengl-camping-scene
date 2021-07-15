@@ -5,7 +5,7 @@
 #include "program.hh"
 #include "wrappers/glmWrapper.hh"
 #include "particleEmitter.hh"
-
+#include "lightManager.hh"
 
 
 class FireworkEmitter {
@@ -19,8 +19,14 @@ public:
         GLboolean generateParticles = false;
     };
 
+    struct FireWorkLight {
+        unsigned lightId;
+        float life;
+    };
+
 public:
-    FireworkEmitter(const glm::vec3 &position, const glm::vec3 &color, float rescaleFactor);
+    FireworkEmitter(const glm::vec3 &position, const glm::vec3 &color,
+                    float rescaleFactor, LightManager &lightmanager);
     void bind(const program &program);
     void update(double timePassed);
     void draw();
@@ -39,6 +45,8 @@ protected:
     glm::vec3 emitterPos;
     glm::vec3 particleColor;
     float rescaleFactor;
+    LightManager &lightmanager;
     std::vector<ParticleRender> points;
+    std::vector<FireWorkLight> lights;
 };
 
