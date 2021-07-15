@@ -166,7 +166,7 @@ int run() {
     }
 
     glfwTerminate();
-//    delete program;
+    delete program;
     delete skyboxShader;
     return 0;
 }
