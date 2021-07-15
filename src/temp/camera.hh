@@ -13,6 +13,8 @@ public:
           upVect(0, 1, 0)
     {}
 
+    glm::mat4 getView() const;
+
     glm::mat4 getTransform() const;
 
     void moveCamera(const glm::vec3& offset);

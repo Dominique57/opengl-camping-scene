@@ -33,11 +33,7 @@ void Camera::rotateCamera(const glm::vec2& rawMovement) {
 }
 
 glm::mat4 Camera::getTransform() const {
-    auto viewMat = glm::lookAt(
-        cameraPos,
-        cameraPos + frontVect,
-        upVect
-    );
+    auto viewMat = getView();
 
     // static const since its value ought not to be changed
     static const auto perspective = glm::perspective(
@@ -48,4 +44,13 @@ glm::mat4 Camera::getTransform() const {
     );
 
     return perspective * viewMat;
+}
+
+glm::mat4 Camera::getView() const {
+    auto viewMat = glm::lookAt(
+            cameraPos,
+            cameraPos + frontVect,
+            upVect
+    );
+    return viewMat;
 }
