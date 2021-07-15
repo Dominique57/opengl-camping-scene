@@ -25,7 +25,8 @@
 
 GLFWwindow* window = nullptr;
 Camera camera(10, -10, 30);
-void handleKey(GLFWwindow* window, int key, int, int, int) {
+bool enableFireWorks = false;
+void handleKey(GLFWwindow* window, int key, int scanCode, int action, int mods) {
     glm::vec3 moveOffset{ 0, 0, 0 };
     if (key == KEY_FOREWARD) {
         moveOffset.x = 1;
@@ -43,6 +44,11 @@ void handleKey(GLFWwindow* window, int key, int, int, int) {
         glfwSetWindowShouldClose(window, true);
     } else if (key == GLFW_KEY_P) {
         std::cout << "[CAMERA position]: " << camera.viewCameraPos() << std::endl;
+    } else if (key == GLFW_KEY_ENTER) {
+        std::cout << scanCode << ":" << action << ":" << mods << std::endl;
+        if (action == 1)
+            enableFireWorks = !enableFireWorks;
+        std::cout << enableFireWorks << std::endl;
     }
 
     camera.moveCamera(moveOffset);
@@ -197,7 +203,7 @@ int run() {
         pointShader->use();
         fireworkEmitter.update(0.004);
         static int fireWorkCount = 0;
-        if (fireWorkCount == 0) {
+        if (fireWorkCount <= 0 && enableFireWorks) {
 
             std::random_device rd;
             std::mt19937 gen(rd());
@@ -224,7 +230,8 @@ int run() {
             fireworkEmitter.emit(20);
             fireworkEmitter.setPosition(copyPos);
         }
-        fireWorkCount -= 1;
+        if (enableFireWorks)
+            fireWorkCount -= 1;
         fireworkEmitter.draw();
 
         firePlace.update();
