@@ -92,12 +92,12 @@ int run() {
 
     std::vector<std::string> faces
             {
-                    "skybox/grimm_night/right.png",
-                    "skybox/grimm_night/left.png",
-                    "skybox/grimm_night/top.png",
-                    "skybox/grimm_night/bottom.png",
-                    "skybox/grimm_night/front.png",
-                    "skybox/grimm_night/back.png"
+                    "textures/skybox/grimm_night/right.png",
+                    "textures/skybox/grimm_night/left.png",
+                    "textures/skybox/grimm_night/top.png",
+                    "textures/skybox/grimm_night/bottom.png",
+                    "textures/skybox/grimm_night/front.png",
+                    "textures/skybox/grimm_night/back.png"
             };
 
     // skybox VAO
@@ -132,7 +132,7 @@ int run() {
     // load models
     // -----------
     Model ourModel("textures/backpack/backpack.obj");
-    Model robot("textures/models/nanosuit.blend");
+    Model robot("textures/nanosuit/nanosuit.blend");
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
