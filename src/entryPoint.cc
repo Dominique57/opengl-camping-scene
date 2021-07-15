@@ -119,12 +119,17 @@ int run() {
                    {0.8, 0.8, 256});
     stbi_set_flip_vertically_on_load(false);
 
+    Model car("textures/car2/RV Trailer Truck/RV Trailer Truck doors open.obj",
+                   "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
+                   {0.8, 0.8, 256});
+
     Models models{};
     auto grass_id1 = models.addModel(grass);
     auto tree_id1 = models.addModel(tree);
     auto bench_id1 = models.addModel(bench);
     auto firewood_id1 = models.addModel(firewood);
     auto backpack_id1 = models.addModel(backpack);
+    auto car_id1 = models.addModel(car);
 
     // tweak models
     // -----------
@@ -145,6 +150,10 @@ int run() {
     models.translateModel(backpack_id1, glm::vec3(12.0f, -14.0f, -10.5f));
     models.rotateModel(backpack_id1, -40.0f, glm::vec3(1.0f, 0.0f, 0.0f));
     models.rotateModel(backpack_id1, -10.0f, glm::vec3(0.0f, 0.0f, 1.0f));
+
+    models.translateModel(car_id1, glm::vec3(30.0f, -18.0f, -5.0f));
+    models.rotateModel(car_id1, 75.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    models.scaleModel(car_id1, glm::vec3(0.04f, 0.04f, 0.04f));
 
     // tree generation
     // ---------------
