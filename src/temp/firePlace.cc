@@ -12,7 +12,6 @@ FirePlace::FirePlace(const glm::vec3 &pos, float rescaleFactor, LightManager &li
     };
     auto lightPos = pos;
     lightPos.y += rescaleFactor;
-    std::cout << "lightpos y : " << lightPos.y << '\n';
     lightId = lightManager.addLight(lightPos, lightColor);
     lightManager.updateLights();
 }

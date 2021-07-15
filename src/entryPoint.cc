@@ -1,4 +1,5 @@
 #include "entryPoint.hh"
+#include <random>
 #include <iostream>
 #include <ostream>
 #include "wrappers/glmWrapper.hh"
@@ -13,6 +14,7 @@
 #include "texture/skybox.hh"
 #include "temp/model.hh"
 #include "temp/models.hh"
+#include "temp/fireWorkEmitter.hh"
 
 #define KEY_FOREWARD GLFW_KEY_W
 #define KEY_BACKWARDS GLFW_KEY_S
@@ -97,7 +99,7 @@ int run() {
     skybox.bindToProgram(*skyboxShader);
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
-//    stbi_set_flip_vertically_on_load(true);
+    // stbi_set_flip_vertically_on_load(true);
 
     // load models
     Model grass("textures/grass/10450_Rectangular_Grass_Patch_v1_iterations-2.obj",
@@ -137,8 +139,8 @@ int run() {
     models.scaleModel(grass_id1, glm::vec3(1.f, 0.2f, 1.f));
     models.rotateModel(grass_id1, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
-    models.translateModel(tree_id1, glm::vec3(-3.0f, -18.0f, 0.0f));
-    models.scaleModel(tree_id1, glm::vec3(5.0f, 5.0f, 5.0f));
+//    models.translateModel(tree_id1, glm::vec3(-3.0f, -18.0f, 0.0f));
+//    models.scaleModel(tree_id1, glm::vec3(5.0f, 5.0f, 5.0f));
 
     models.translateModel(bench_id1, glm::vec3(5.0f, -18.0f, -10.0f));
     models.scaleModel(bench_id1, glm::vec3(0.5f, 0.5f, 0.5f));
@@ -174,6 +176,8 @@ int run() {
     }
     auto firePlace = FirePlace({ 10, -17, 0 }, 3.f, lightManager);
     firePlace.bind(*pointShader);
+    auto fireworkEmitter = FireworkEmitter({5, -2, 40}, {0, 0, 1}, 1.f);
+    fireworkEmitter.bind(*pointShader);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
@@ -191,6 +195,38 @@ int run() {
         models.draw();
 
         pointShader->use();
+        fireworkEmitter.update(0.004);
+        static int fireWorkCount = 0;
+        if (fireWorkCount == 0) {
+
+            std::random_device rd;
+            std::mt19937 gen(rd());
+            std::uniform_int_distribution<unsigned>unif_int(50, 300);
+            fireWorkCount = unif_int(gen);
+
+
+            std::uniform_real_distribution<float> unif_flot(-5, 5);
+            auto copyPos = fireworkEmitter.getPosition();
+            fireworkEmitter.setPosition(fireworkEmitter.getPosition() +
+                glm::vec3(unif_flot(gen), unif_flot(gen), unif_flot(gen)));
+
+            const std::vector<glm::vec3> possiblesColors{
+                {1, 0, 0},
+                {1, 0, 1},
+                {1, 1, 0},
+                {0, 1, 0},
+                {0, 1, 1},
+                {0, 0, 1},
+            };
+            std::uniform_int_distribution<unsigned> unif_index(0, possiblesColors.size());
+            fireworkEmitter.setParticleColor(possiblesColors[unif_index(gen)]);
+
+            fireworkEmitter.emit(20);
+            fireworkEmitter.setPosition(copyPos);
+        }
+        fireWorkCount -= 1;
+        fireworkEmitter.draw();
+
         firePlace.update();
         firePlace.draw();
 
