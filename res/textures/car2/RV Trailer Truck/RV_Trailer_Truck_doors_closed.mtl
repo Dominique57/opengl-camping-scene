@@ -1,0 +1,465 @@
+newmtl default
+d 1
+Ns 1
+Ni 0
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/spb1.jpg
+
+newmtl default_flat_screen
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 0 0 0
+Ks 1 1 1
+Km 0
+
+newmtl default_tv
+d 1
+Ns 1
+Ni 0
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/spb1.jpg
+
+newmtl default_flat_screen_tv
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 0 0 0
+Ks 1 1 1
+Km 0
+
+newmtl default_RV_Trailer_Truck_doors_closed
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/cmp1.jpg
+
+newmtl default_wipers
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 0.27451 0.27451 0.27451
+Ks 1 1 1
+Km 0
+
+newmtl default_headlights2
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+
+newmtl default_seat_cushions
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/fvza1.jpg
+
+newmtl default_rv2_windows
+d 0.8
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 0 0 0
+Ks 1 1 1
+Km 0
+
+newmtl default_rv2_full_body_grill
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/gr2.jpg
+
+newmtl default_rv2_full_body_cover
+d 0.6
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 0 1 1
+Ks 1 1 1
+Km 0
+
+newmtl default_kitchen_sink_stuff
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 0.827451 0.776471
+Ks 1 1 1
+Km 0
+
+newmtl default_metal
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+
+newmtl default_counter_top
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/antenna_01.jpg
+
+newmtl default_top_kitchen_cabinets_stuff
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 0.827451 0.776471
+Ks 1 1 1
+Km 0
+
+newmtl default_handles
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+
+newmtl default_stove2
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 0 0 0
+Ks 1 1 1
+Km 0
+
+newmtl default_ct
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 0 0 0
+Ks 1 1 1
+Km 0
+
+newmtl default_stove
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+
+newmtl default_bath_extras
+d 0.8
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 0 0 0
+Ks 1 1 1
+Km 0
+
+newmtl default_sink
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/antenna_01_01.jpg
+
+newmtl default_tubes
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+
+newmtl default_sofa
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/fvza1.jpg
+
+newmtl default_interior_rv_truck
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/yx1_02_01_01_01_01_01.jpg
+
+newmtl default_refrigerator
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 0 0 0
+Ks 1 1 1
+Km 0
+
+newmtl default_f2
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+
+newmtl default_rv_handles
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+
+newmtl default_rv_wood
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/byw1_01_01_02_01_01.jpg
+
+newmtl default_rv_matress
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+
+newmtl default_rv_sheet_pillow
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/ers1b.jpg
+
+newmtl default_rv_sheet_2
+d 1
+Ns 0.75
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/ddt_03_01_01_01_01_01_01_01_01_01_01.jpg
+
+newmtl default_tires_rv_truck
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/xgb5.jpg
+
+newmtl default_chasis2
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+
+newmtl default_rv2_full_body
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/cmp1.jpg
+
+newmtl default_rv_truck2_inner_lining_skin_seats
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/ddt_03_01_01_01_01_01_01_01.jpg
+
+newmtl default_brake_lens
+d 1
+Ns 1
+Ni 0
+Ka 1 0 0
+Kd 1 0 0
+Ks 1 1 1
+Km 0
+
+newmtl default_bumpers
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 0 0 0
+Ks 1 1 1
+Km 0
+
+newmtl default_dinner
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/byw1_01_01.jpg
+
+newmtl default_dinner_cushions
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/fvza1.jpg
+
+newmtl default_bath_door_rv_2
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/byw1_01_01.jpg
+
+newmtl default_door_handle
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+
+newmtl default_door_loaded
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+
+newmtl default_inner_lining
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/ddt_03_01_01_01_01_01_01_01.jpg
+
+newmtl default_door
+d 1
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/cmp1.jpg
+
+newmtl default_dash_display
+d 1
+Ns 1
+Ni 0
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/cwl1.jpg
+
+newmtl default_d2
+d 1
+Ns 1
+Ni 0
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/fc1.jpg
+
+newmtl default_d3
+d 1
+Ns 1
+Ni 0
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/2013-Silverado-INT-Dash-2.jpg
+
+newmtl default_d4
+d 1
+Ns 1
+Ni 0
+Ka 1 1 1
+Kd 1 1 1
+Ks 1 1 1
+Km 0
+map_Kd /Maps/sx3.jpg
+
+newmtl default_door_loaded_door_loaded
+d 0.8
+Ns 1
+Ni 0
+Ka 0 0 0
+Kd 0 0 0
+Ks 1 1 1
+Km 0
+
