@@ -74,6 +74,7 @@ int run() {
     // Input callbacks
     glfwSetKeyCallback(window, handleKey);
     glfwSetCursorPosCallback(window, handleMouseMove);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetScrollCallback(window, handleScroll);
     // Reset cursor to center of the screen
     int screen_w, screen_h;
@@ -113,7 +114,7 @@ int run() {
                 {1, 0.1, 32});
     Model tree("textures/tree/Tree.obj",
                "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
-               {0.8, 0.8, 256});
+               {0.8, 0.3, 256});
     Model bench("textures/bench/Lawka 2 - model.obj",
                 "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
                 {0.8, 0.8, 256});
@@ -145,14 +146,14 @@ int run() {
     models.scaleModel(grass_id1, glm::vec3(1.f, 0.2f, 1.f));
     models.rotateModel(grass_id1, -90.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 
-    models.translateModel(tree_id1, glm::vec3(-3.0f, -18.0f, 0.0f));
+    models.translateModel(tree_id1, glm::vec3(-15.0f, -18.0f, 5.0f));
     models.scaleModel(tree_id1, glm::vec3(5.0f, 5.0f, 5.0f));
 
     models.translateModel(bench_id1, glm::vec3(5.0f, -18.0f, -10.0f));
     models.scaleModel(bench_id1, glm::vec3(0.5f, 0.5f, 0.5f));
     models.rotateModel(bench_id1, -20.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 
-    models.translateModel(firewood_id1, glm::vec3(10.0f, -18.0f, 0.0f));
+    models.translateModel(firewood_id1, glm::vec3(5.0f, -18.0f, 5.0f));
     models.scaleModel(firewood_id1, glm::vec3(2.0f, 2.0f, 2.0f));
 
     models.translateModel(backpack_id1, glm::vec3(12.0f, -14.0f, -10.5f));
@@ -180,7 +181,7 @@ int run() {
         std::cerr << pointShader->getlog();
         return 1;
     }
-    auto firePlace = FirePlace({ 10, -17, 0 }, 3.f, lightManager);
+    auto firePlace = FirePlace({ 5, -17, 5 }, 3.f, lightManager);
     firePlace.bind(*pointShader);
     auto fireworkEmitter = FireworkEmitter({5, -2, 40}, {0, 0, 1}, 1.f, lightManager);
     fireworkEmitter.bind(*pointShader);
@@ -222,7 +223,6 @@ int run() {
                 {1, 1, 0},
                 {0, 1, 0},
                 {0, 1, 1},
-                {0, 0, 1},
             };
             std::uniform_int_distribution<unsigned> unif_index(0, possiblesColors.size());
             fireworkEmitter.setParticleColor(possiblesColors[unif_index(gen)]);

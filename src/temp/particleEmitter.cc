@@ -127,9 +127,13 @@ void ParticleEmitter::draw() {
     // Draw
     glBindVertexArray(vaoId); TEST_OPENGL_ERROR()
     glBindBuffer(GL_ARRAY_BUFFER, vboData); TEST_OPENGL_ERROR()
+
+
     glEnable(GL_BLEND);
     glDepthMask(GL_FALSE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+
+
     glBufferData(GL_ARRAY_BUFFER, 4000 * sizeof(ParticleRender), copy.data(),
                  GL_DYNAMIC_DRAW); TEST_OPENGL_ERROR()
     glDrawArrays(GL_POINTS, 0, points.size()); TEST_OPENGL_ERROR()
