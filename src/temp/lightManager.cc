@@ -15,7 +15,8 @@ LightManager::LightManager(unsigned int maxLights)
 void LightManager::updateLights() {
     glBindBuffer(GL_SHADER_STORAGE_BUFFER, ssboId);
     auto ssboLength = std::array<GLuint, 4>{
-        0, 0, 0, (unsigned)(lights.size())
+        (unsigned)(lights.size()), (unsigned)(lights.size()),
+        (unsigned)(lights.size()), (unsigned)(lights.size())
     };
     glBufferSubData(GL_SHADER_STORAGE_BUFFER, 0, 4 * sizeof(GLuint), &(ssboLength[0]));
     glBufferSubData(GL_SHADER_STORAGE_BUFFER, 4 * sizeof(GLuint), lights.size() * sizeof(Light), lights.data());

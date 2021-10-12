@@ -47,7 +47,7 @@ void FireworkEmitter::bind(const program &program) {
     glBindBuffer(GL_ARRAY_BUFFER, 0); TEST_OPENGL_ERROR()
 }
 
-void FireworkEmitter::update(double timePassed) {
+void FireworkEmitter::update(double) {
     for (auto i = 0U; i < lights.size(); ++i) {
         lights[i].life -= 0.005;
         auto& lightRessource = lightmanager.getLight(lights[i].lightId);
@@ -134,7 +134,7 @@ void FireworkEmitter::emit(unsigned count) {
         points.push_back(particle);
     }
     lights.emplace_back(FireWorkLight {
-         lightmanager.addLight(emitterPos, particleColor * 0.1f),
+         lightmanager.addLight(emitterPos, particleColor * 0.3f),
          0.99f
     });
     lightmanager.updateLights();

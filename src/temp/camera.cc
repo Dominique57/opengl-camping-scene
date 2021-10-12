@@ -37,8 +37,8 @@ glm::mat4 Camera::getTransform() const {
 
     // static const since its value ought not to be changed
     static const auto perspective = glm::perspective(
-        glm::radians(45.0f),
-        1.0f,
+        glm::radians(65.0f),
+        1.1f,
         0.1f,
         600.f
     );
