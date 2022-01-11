@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "model.hh"
-#include "program.hh"
+#include "temp/program.hh"
 
 struct ModelData {
     Model &model_;

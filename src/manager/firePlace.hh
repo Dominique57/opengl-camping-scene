@@ -2,8 +2,8 @@
 
 #pragma once
 
-#include "temp/lightManager.hh"
-#include "temp/particleEmitter.hh"
+#include "lightManager.hh"
+#include "particleEmitter.hh"
 
 class FirePlace {
 public:

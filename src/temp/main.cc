@@ -11,7 +11,7 @@
 #include "camera.hh"
 #include "init_gl.hh"
 #include "program.hh"
-#include "objLoader.hh"
+#include "model/objLoader.hh"
 
 void addObjects(const program &program) {
     // Vertex array

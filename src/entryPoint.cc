@@ -6,15 +6,15 @@
 #include "wrappers/glWrapper.hh"
 #include <GLFW/glfw3.h>
 #include <vector>
-#include <temp/lightManager.hh>
-#include <temp/firePlace.hh>
-#include "temp/camera.hh"
+#include <manager/lightManager.hh>
+#include <manager/firePlace.hh>
+#include <player/camera.hh>
 #include "temp/init_gl.hh"
 #include "temp/program.hh"
 #include "texture/skybox.hh"
-#include "temp/model.hh"
-#include "temp/models.hh"
-#include "temp/fireWorkEmitter.hh"
+#include "model/model.hh"
+#include "model/models.hh"
+#include "manager/fireWorkEmitter.hh"
 
 #define KEY_FOREWARD GLFW_KEY_W
 #define KEY_BACKWARDS GLFW_KEY_S

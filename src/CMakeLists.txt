@@ -14,24 +14,28 @@ find_package(glfw3 REQUIRED)
 add_library(SOURCE_LIB STATIC
     entryPoint.cc entryPoint.hh
 
-    temp/camera.cc temp/camera.hh
+    player/camera.cc player/camera.hh
+
+    model/objLoader.cc model/objLoader.hh
+    model/mesh.cc model/mesh.hh
+    model/model.cc model/model.hh
+    model/models.hh model/models.cc
+
     temp/init_gl.cc temp/init_gl.hh
-    temp/objLoader.cc temp/objLoader.hh
     temp/program.cc temp/program.hh
-    temp/mesh.cc temp/mesh.hh
-    temp/model.cc temp/model.hh
+    temp/vao.cc temp/vao.hh
+    temp/stb_image.h temp/stb_image_implementation.cc
+
+    manager/lightManager.cc manager/lightManager.hh
+    manager/particleEmitter.cc manager/particleEmitter.hh
+    manager/fireworkEmitter.cc manager/fireWorkEmitter.hh
+    manager/firePlace.cc manager/firePlace.hh
+
+    texture/skybox.hh texture/skybox.cc
 
     wrappers/glWrapper.cc wrappers/glWrapper.hh
     wrappers/glmWrapper.hh
     wrappers/wrapper.cc wrappers/wrapper.hh
-    temp/vao.cc temp/vao.hh
-    temp/lightManager.cc temp/lightManager.hh
-    temp/stb_image.h temp/stb_image_implementation.cc
-    texture/skybox.hh texture/skybox.cc
-    temp/models.hh temp/models.cc
-    temp/particleEmitter.cc temp/particleEmitter.hh
-    temp/fireworkEmitter.cc temp/fireWorkEmitter.hh
-    temp/firePlace.cc temp/firePlace.hh
     )
 
 target_compile_features(SOURCE_LIB PRIVATE

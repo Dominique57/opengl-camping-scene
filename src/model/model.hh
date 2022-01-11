@@ -9,7 +9,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include "temp/mesh.hh"
+#include "mesh.hh"
 #include "temp/program.hh"
 
 #include <string>

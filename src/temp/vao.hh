@@ -1,7 +1,7 @@
 #pragma once
 
 #include <vector>
-#include "temp/objLoader.hh"
+#include "model/objLoader.hh"
 #include "temp/program.hh"
 #include "wrappers/glWrapper.hh"
 
