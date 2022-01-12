@@ -97,7 +97,11 @@ int run() {
     // skybox VAO
     Skybox skybox{faces};
 
-    auto* skyboxShader = program::make_program_path("vert/vert_skybox.glsl", "frag/frag_skybox.glsl");
+    auto* skyboxShader = program::make_program_path({
+        {"vert/vert_skybox.glsl", GL_VERTEX_SHADER, "VERTEX"},
+        {"frag/frag_skybox.glsl", GL_FRAGMENT_SHADER, "FRAGMENT"},
+    });
+
     if (!skyboxShader->isready()) {
         std::cerr << "Failed to build shader :\n" << skyboxShader->getlog() << '\n';
         return 1;
@@ -176,7 +180,10 @@ int run() {
     }
 
     TEST_OPENGL_ERROR()
-    auto pointShader = program::make_program_path("vert/shaderPoints.glsl", "frag/shaderPoints.glsl");
+    auto pointShader = program::make_program_path({
+        {"vert/shaderPoints.glsl", GL_VERTEX_SHADER, "VERTEX"},
+        {"frag/shaderPoints.glsl", GL_FRAGMENT_SHADER, "FRAGMENT"},
+    });
     if (!pointShader->isready()) {
         std::cerr << pointShader->getlog();
         return 1;

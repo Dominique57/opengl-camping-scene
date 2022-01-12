@@ -42,7 +42,7 @@ GLuint compileShader(const std::string& shader_src, GLenum shader_type,
     return shader;
 }
 
-void linkShader(GLuint program, std::initializer_list<GLuint> shaders) {
+void linkShader(GLuint program, const std::vector<GLuint>& shaders) {
     for (auto shader : shaders)
         glAttachShader(program, shader);
     glLinkProgram(program);
@@ -52,9 +52,10 @@ void linkShader(GLuint program, std::initializer_list<GLuint> shaders) {
     if (isLinked == GL_FALSE) {
         auto infoLog = getProgramLog(program);
 
-        glDeleteProgram(program);
-        for (auto shader : shaders)
+        for (auto shader : shaders) {
+            glDetachShader(program, shader);
             glDeleteShader(shader);
+        }
 
         throw std::runtime_error(infoLog.data());
     }

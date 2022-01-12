@@ -9,14 +9,17 @@
 
 class program {
 public:
+    struct ShaderSource {
+        std::string src;
+        GLenum type;
+        std::string name;
+    };
+public:
     program();
     ~program();
-    static program* make_program(
-            const std::string& vertex_shader_src,
-            const std::string& fragment_shader_src);
-    static program* make_program_path(
-            const std::string& vertex_path,
-            const std::string& fragment_path);
+
+    static program* make_program(const std::vector<ShaderSource>& shaders);
+    static program* make_program_path(const std::vector<ShaderSource>& shaders_path);
 
     const char* getlog() const { return log_.c_str(); };
     bool isready() const { return ready_; }
@@ -35,7 +38,7 @@ public:
     void setFloat(const std::string &name, float value) const;
 
 protected:
-    program(GLuint program, const std::string& log, bool ready)
+    program(GLuint program, const std::string& log="", bool ready=false)
         : program_(program), log_(log), ready_(ready)
     {}
 
@@ -43,5 +46,5 @@ private:
     GLuint program_;
 
     std::string log_;
-    bool ready_ = false;
+    bool ready_;
 };

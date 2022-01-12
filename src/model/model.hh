@@ -24,7 +24,10 @@ class Model
 public:
     Model(const char *path, const char *vertex_path, const char *frag_path, const glm::vec3 &textureCoef) {
         loadModel(path);
-        program_ = program::make_program_path(vertex_path, frag_path);
+        program_ = program::make_program_path({
+            {vertex_path, GL_VERTEX_SHADER, "VERTEX"},
+            {frag_path, GL_FRAGMENT_SHADER, "FRAGMENT"},
+        });
         if (!program_->isready()) {
             std::cerr << "Failed to build shader :\n" << program_->getlog() << '\n';
             delete program_;

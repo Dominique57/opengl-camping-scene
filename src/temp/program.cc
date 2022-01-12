@@ -31,51 +31,42 @@ static inline std::string readFile(const std::string& path) {
     return buffer.str();
 }
 
-program* program::make_program_path(
-        const std::string& vertex_path, const std::string& frag_path) {
-    auto vertex_src = readFile(vertex_path);
-    auto frag_src = readFile(frag_path);
-    return make_program(vertex_src, frag_src);
+program* program::make_program_path(const std::vector<program::ShaderSource>& shaders_path) {
+    auto shaders_src = shaders_path;
+    for (auto& shader_src : shaders_src) {
+        shader_src.src = readFile(shader_src.src);
+    }
+    return make_program(shaders_src);
 
 }
 
-program* program::make_program(
-        const std::string& vertex, const std::string& fragment) {
-    // https://www.khronos.org/opengl/wiki/Example/GLSL_Full_Compile_Linking
-    // Create and compile vertexShader and fragmentShader
-    auto res = new program(0, "", true);
+program* program::make_program(const std::vector<program::ShaderSource>& shaders) {
+    auto res = new program(glCreateProgram()); TEST_OPENGL_ERROR();
+    auto shaders_id = std::vector<GLuint>{};
 
-    GLuint vertexShader;
-    GLuint fragShader;
     try {
-        vertexShader = compileShader(vertex, GL_VERTEX_SHADER, "VERTEX");
-    } catch (const std::runtime_error& e) {
-        res->log_ = std::string(e.what());
+        // Compile & link
+        for (const auto& shader : shaders)
+            shaders_id.push_back(compileShader(shader.src, shader.type, shader.name));
+        linkShader(res->program_, shaders_id);
+    } catch (const std::exception& e) {
+        // Create error state
+        res->program_ = 0;
+        res->log_ = e.what();
         res->ready_ = false;
+
+        // Delete ressources
+        for (auto shader : shaders_id)
+            glDeleteShader(shader); TEST_OPENGL_ERROR();
+        glDeleteProgram(res->program_); TEST_OPENGL_ERROR();
         return res;
     }
 
-    try {
-        fragShader = compileShader(fragment, GL_FRAGMENT_SHADER, "FRAGMENT");
-    } catch (const std::runtime_error& e) {
-        glDeleteShader(vertexShader);
-        res->log_ = std::string(e.what());
-        res->ready_ = false;
-        return res;
-    }
+    // Free compile-needed shaders ressources
+    for (auto shader_id : shaders_id)
+        glDeleteShader(shader_id); TEST_OPENGL_ERROR();
 
-    GLuint program = glCreateProgram();
-    try {
-        linkShader(program, {vertexShader, fragShader});
-    } catch (const std::runtime_error& e) {
-        glDeleteShader(vertexShader);
-        glDeleteShader(fragShader);
-        res->log_ = std::string(e.what());
-        res->ready_ = false;
-        return res;
-    }
-
-    res->program_ = program;
+    res->ready_ = true;
     return res;
 }
 
