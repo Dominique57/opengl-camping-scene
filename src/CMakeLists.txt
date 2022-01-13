@@ -30,6 +30,7 @@ add_library(SOURCE_LIB STATIC
     manager/particleEmitter.cc manager/particleEmitter.hh
     manager/fireworkEmitter.cc manager/fireWorkEmitter.hh
     manager/firePlace.cc manager/firePlace.hh
+    manager/gpuParticleEmitter.cc manager/gpuParticleEmitter.hh
 
     texture/skybox.hh texture/skybox.cc
 

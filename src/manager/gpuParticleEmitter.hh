@@ -6,7 +6,7 @@
 #include <temp/program.hh>
 
 
-class ParticleEmitter {
+class GpuParticleEmitter {
 public:
     struct ParticleRender {
         glm::vec3 position;
@@ -15,17 +15,21 @@ public:
         GLfloat lifeLeft = 1.f;
     };
 public:
-    explicit ParticleEmitter(const glm::vec3 &position, float rescaleFactor);
+    explicit GpuParticleEmitter(const glm::vec3 &position, float rescaleFactor);
+
     void bind(const program &program);
-    void update(double timePassed);
+    void update(const program& computeShader);
     void draw();
-    void emit(unsigned count);
+
+//private:
+    void init_particles();
 
 protected:
     GLuint vaoId;
     GLuint vboData;
+    unsigned particleCount = 1;
+
     glm::vec3 emitterPos;
     float rescaleFactor;
-    std::vector<ParticleRender> points;
 };
 
