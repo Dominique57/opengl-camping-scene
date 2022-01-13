@@ -34,7 +34,6 @@ void Models::draw() {
         modelData.model_.getProgram()->setUniformMat4("model", modelData.model_transform_, true);
         modelData.model_.getProgram()->use();
         modelData.model_.draw();
-        IGNORE_OPENGL_ERROR()
     }
 }
 

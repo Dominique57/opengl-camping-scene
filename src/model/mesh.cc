@@ -69,7 +69,7 @@ void Mesh::draw(program *program)
         else if(name == "texture_specular")
             number = std::to_string(specularNr++);
 
-        glUniform1f(glGetUniformLocation(program->get_program(), (name + number).c_str()), i);
+        glUniform1i(glGetUniformLocation(program->get_program(), (name + number).c_str()), i); TEST_OPENGL_ERROR()
         glBindTexture(GL_TEXTURE_2D, textures_[i].id);
     }
     glActiveTexture(GL_TEXTURE0);
@@ -80,5 +80,5 @@ void Mesh::draw(program *program)
                    indices_.size(),
                    GL_UNSIGNED_INT,
                    (void*)0);
-    glBindVertexArray(GL_TEXTURE0);
+    glBindVertexArray(0);
 }
