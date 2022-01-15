@@ -13,7 +13,6 @@ ParticleEmitter::ParticleEmitter(const glm::vec3 &position, float rescaleFactor)
     glBufferData(GL_ARRAY_BUFFER, 2000 * sizeof(ParticleRender), nullptr,
                  GL_DYNAMIC_DRAW); TEST_OPENGL_ERROR()
 
-//    glEnable(GL_POINT_SMOOTH); TEST_OPENGL_ERROR()
     glEnable(GL_PROGRAM_POINT_SIZE); TEST_OPENGL_ERROR()
 
     glBindVertexArray(0); TEST_OPENGL_ERROR()

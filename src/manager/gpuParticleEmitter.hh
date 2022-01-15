@@ -10,8 +10,8 @@ class GpuParticleEmitter {
 public:
     struct ParticleRender {
         glm::vec3 position;
-        glm::vec3 color;
         GLfloat size;
+        glm::vec3 color;
         GLfloat lifeLeft = 1.f;
     };
 public:
@@ -27,7 +27,7 @@ public:
 protected:
     GLuint vaoId;
     GLuint vboData;
-    unsigned particleCount = 1;
+    unsigned particleCount = 1000;
 
     glm::vec3 emitterPos;
     float rescaleFactor;

@@ -13,11 +13,10 @@ GpuParticleEmitter::GpuParticleEmitter(const glm::vec3 &position, float rescaleF
     glGenBuffers(1, &vboData); TEST_OPENGL_ERROR()
     glBindBuffer(GL_ARRAY_BUFFER, vboData); TEST_OPENGL_ERROR()
     glBufferData(GL_ARRAY_BUFFER, particleCount * sizeof(ParticleRender), nullptr,
-                 GL_STATIC_DRAW); TEST_OPENGL_ERROR()
+                 GL_DYNAMIC_DRAW); TEST_OPENGL_ERROR()
 
     // Enable options
     glEnable(GL_PROGRAM_POINT_SIZE); TEST_OPENGL_ERROR()
-//    glEnable(GL_POINT_SMOOTH); TEST_OPENGL_ERROR()
 
     // Disable everything
     glBindVertexArray(0); TEST_OPENGL_ERROR()
@@ -56,7 +55,7 @@ void GpuParticleEmitter::init_particles() {
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> height(0, 1);
+    std::uniform_real_distribution<float> height(0, 5);
     std::normal_distribution<float> norm(0, 0.25);
     std::normal_distribution<float> normHigh(0, 0.75);
 
@@ -70,7 +69,7 @@ void GpuParticleEmitter::init_particles() {
 
         const ParticleRender particle{
             glm::vec3{xrand, yrand, zrand},
-            {1, 0, 0}, 1, life
+            1., {1, 0, 0}, life
         };
         points.push_back(particle);
     }
@@ -78,7 +77,7 @@ void GpuParticleEmitter::init_particles() {
     glBindVertexArray(vaoId); TEST_OPENGL_ERROR()
     glBindBuffer(GL_ARRAY_BUFFER, vboData); TEST_OPENGL_ERROR()
     glBufferData(GL_ARRAY_BUFFER, particleCount * sizeof(ParticleRender), points.data(),
-                 GL_STATIC_DRAW); TEST_OPENGL_ERROR()
+                 GL_DYNAMIC_DRAW); TEST_OPENGL_ERROR()
     glBindVertexArray(0); TEST_OPENGL_ERROR()
     glBindBuffer(GL_ARRAY_BUFFER, 0); TEST_OPENGL_ERROR()
 }

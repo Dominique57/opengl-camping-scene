@@ -25,7 +25,7 @@
 #define KEY_DOWN GLFW_KEY_LEFT_CONTROL
 
 GLFWwindow* window = nullptr;
-Camera camera(10, -10, 30);
+Camera camera(0, 0, 10);
 bool enableFireWorks = false;
 void handleKey(GLFWwindow* window, int key, int scanCode, int action, int mods) {
     glm::vec3 moveOffset{ 0, 0, 0 };
@@ -192,6 +192,10 @@ int run() {
     auto particleUpdateShader = program::make_program_path({
         {"compute/particle_update.glsl", GL_COMPUTE_SHADER, "COMPUTE"},
     });
+    if (!particleUpdateShader->isready()) {
+        std::cerr << particleUpdateShader->getlog();
+        return 1;
+    }
     auto gpuParticleEmitter = GpuParticleEmitter({0, -5, 0}, .3f);
     gpuParticleEmitter.bind(*pointShader);
     gpuParticleEmitter.init_particles();
