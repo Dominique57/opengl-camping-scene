@@ -76,7 +76,12 @@ vec3 updatePosition(vec3 pPos)
 
 float updateSize(float lifeLeft)
 {
-    return 0;
+    float lifeSpent = 1 - lifeLeft;
+    if (lifeSpent < 0.5)
+        return mix(1.6f, 1.2f, lifeSpent * 2.f);
+    if (lifeSpent < 0.8)
+        return mix(1.2f, 1.0f, (lifeSpent - 0.5) * 3.33f);
+    return mix(1.0f, 0.8f, (lifeSpent - 0.8f) * 5.f);
 }
 
 float updateLifeLeft(float lifeLeft)
@@ -101,9 +106,11 @@ void main() {
     float newLifeLeft = updateLifeLeft(lifeLeft);
     vec3 newPos = updatePosition(pPos);
     vec3 newColor = updateColor(newPos);
+    float newSize = updateSize(lifeLeft);
 
     // Write new data
     particles[i].position = newPos;
+    particles[i].size = newSize;
     particles[i].color = newColor;
     particles[i].lifeLeft = newLifeLeft;
 }

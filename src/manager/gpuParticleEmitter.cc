@@ -12,7 +12,8 @@ GpuParticleEmitter::GpuParticleEmitter(const glm::vec3 &position, float rescaleF
     // Create and use vbo
     glGenBuffers(1, &vboData); TEST_OPENGL_ERROR()
     glBindBuffer(GL_ARRAY_BUFFER, vboData); TEST_OPENGL_ERROR()
-    glBufferData(GL_ARRAY_BUFFER, particleCount * sizeof(ParticleRender), nullptr,
+    auto points = create_particles();
+    glBufferData(GL_ARRAY_BUFFER, particleCount * sizeof(ParticleRender), points.data(),
                  GL_DYNAMIC_DRAW); TEST_OPENGL_ERROR()
 
     // Enable options
@@ -52,7 +53,7 @@ void GpuParticleEmitter::bind_compute(const program &program) {
     glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, vboData);
 }
 
-void GpuParticleEmitter::init_particles() {
+std::vector<GpuParticleEmitter::ParticleRender> GpuParticleEmitter::create_particles() {
     auto points = std::vector<ParticleRender>{};
     points.reserve(particleCount);
 
@@ -76,14 +77,7 @@ void GpuParticleEmitter::init_particles() {
         points.push_back(particle);
     }
 
-    glBindVertexArray(vaoId); TEST_OPENGL_ERROR()
-    glBindBuffer(GL_ARRAY_BUFFER, vboData); TEST_OPENGL_ERROR()
-
-    glBufferData(GL_ARRAY_BUFFER, points.size() * sizeof(ParticleRender), points.data(),
-                 GL_DYNAMIC_DRAW); TEST_OPENGL_ERROR()
-
-    glBindVertexArray(0); TEST_OPENGL_ERROR()
-    glBindBuffer(GL_ARRAY_BUFFER, 0); TEST_OPENGL_ERROR()
+    return points;
 }
 
 void GpuParticleEmitter::update() {

@@ -199,7 +199,6 @@ int run() {
     auto gpuParticleEmitter = GpuParticleEmitter({0, -17, 5}, 3.f);
     gpuParticleEmitter.bind_fragment(*pointShader);
     gpuParticleEmitter.bind_compute(*particleUpdateShader);
-    gpuParticleEmitter.init_particles();
     auto firePlace = FirePlace({ 5, -17, 5 }, 2.5f, lightManager);
     firePlace.bind(*pointShader);
     auto fireworkEmitter = FireworkEmitter({5, -2, 40}, {0, 0, 1}, 1.f, lightManager);

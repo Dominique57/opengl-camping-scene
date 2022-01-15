@@ -24,13 +24,13 @@ public:
     void update();
     void draw(const program &program);
 
-//private:
-    void init_particles();
+private:
+    std::vector<ParticleRender> create_particles();
 
 protected:
     GLuint vaoId;
     GLuint vboData;
-    unsigned particleCount = 1000;
+    unsigned particleCount = 600;
 
     glm::vec3 emitterPos;
     float rescaleFactor;
