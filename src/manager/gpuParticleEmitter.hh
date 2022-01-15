@@ -9,6 +9,8 @@
 class GpuParticleEmitter {
 public:
     struct ParticleRender {
+        glm::vec3 originalPosition;
+        GLfloat originalLifeLeft;
         glm::vec3 position;
         GLfloat size;
         glm::vec3 color;

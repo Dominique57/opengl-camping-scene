@@ -55,7 +55,7 @@ void GpuParticleEmitter::init_particles() {
 
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<float> height(0, 5);
+    std::uniform_real_distribution<float> height(0, 1);
     std::normal_distribution<float> norm(0, 0.25);
     std::normal_distribution<float> normHigh(0, 0.75);
 
@@ -68,8 +68,9 @@ void GpuParticleEmitter::init_particles() {
             life = -life;
 
         const ParticleRender particle{
-            glm::vec3{xrand, yrand, zrand},
-            1., {1, 0, 0}, life
+            {xrand, 0, zrand}, life,
+            {xrand, yrand, zrand}, 1.,
+            {1, 0, 0}, life
         };
         points.push_back(particle);
     }
