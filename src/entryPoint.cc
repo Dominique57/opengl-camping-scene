@@ -25,7 +25,7 @@
 #define KEY_DOWN GLFW_KEY_LEFT_CONTROL
 
 GLFWwindow* window = nullptr;
-Camera camera(0, 0, 10);
+Camera camera(10, -10, 30);
 bool enableFireWorks = false;
 void handleKey(GLFWwindow* window, int key, int scanCode, int action, int mods) {
     glm::vec3 moveOffset{ 0, 0, 0 };
@@ -196,10 +196,11 @@ int run() {
         std::cerr << particleUpdateShader->getlog();
         return 1;
     }
-    auto gpuParticleEmitter = GpuParticleEmitter({0, -5, 0}, .3f);
-    gpuParticleEmitter.bind(*pointShader);
+    auto gpuParticleEmitter = GpuParticleEmitter({0, -17, 5}, 3.f);
+    gpuParticleEmitter.bind_fragment(*pointShader);
+    gpuParticleEmitter.bind_compute(*particleUpdateShader);
     gpuParticleEmitter.init_particles();
-    auto firePlace = FirePlace({ 5, -17, 5 }, 3.f, lightManager);
+    auto firePlace = FirePlace({ 5, -17, 5 }, 2.5f, lightManager);
     firePlace.bind(*pointShader);
     auto fireworkEmitter = FireworkEmitter({5, -2, 40}, {0, 0, 1}, 1.f, lightManager);
     fireworkEmitter.bind(*pointShader);
@@ -253,12 +254,12 @@ int run() {
         fireworkEmitter.draw();
 
         firePlace.update();
-        firePlace.draw();
+        firePlace.draw(*pointShader);
 
-        gpuParticleEmitter.draw();
+        gpuParticleEmitter.draw(*pointShader);
 
         particleUpdateShader->use();
-        gpuParticleEmitter.update(*particleUpdateShader);
+        gpuParticleEmitter.update();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

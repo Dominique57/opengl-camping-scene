@@ -50,6 +50,6 @@ void FirePlace::update() {
     particleEmitter.emit(4);
 }
 
-void FirePlace::draw() {
-    particleEmitter.draw();
+void FirePlace::draw(const program &program) {
+    particleEmitter.draw(program);
 }

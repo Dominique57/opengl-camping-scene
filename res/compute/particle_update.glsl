@@ -11,7 +11,7 @@ struct ParticleRender {
     float lifeLeft;
 };
 
-layout(std430, binding = 79) buffer Particles {
+layout(std430, binding = 1) buffer Particles {
     ParticleRender particles[];
 };
 
@@ -60,16 +60,16 @@ vec3 updatePosition(vec3 pPos)
     // Vertical update
     float upSpeed = 0.01; // [0.005-0.015]
     newPos.y = pPos.y + upSpeed;
-//    newPos.y = (pPos.y > 4)? 0: pPos.y + upSpeed;
 
     // Horizontal update
     vec3 posEmitterPlane = vec3(0, 0, 0);
     vec3 posInEmitterPlane = vec3(pPos.x, 0, pPos.z);
     vec3 particleDir = normalize(posEmitterPlane - posInEmitterPlane);
-    float lengthToEmitter = length(particleDir);
-    lengthToEmitter = (pPos.y > 2)? lengthToEmitter: -lengthToEmitter;
-    newPos.x += particleDir.x * lengthToEmitter * 0.0025f;
-    newPos.z += particleDir.z * lengthToEmitter * 0.0025f;
+    float lengthToAxis = length(posEmitterPlane - posInEmitterPlane);
+    lengthToAxis = (pPos.y < 1)? -lengthToAxis: lengthToAxis;
+    lengthToAxis = (pPos.y >= 1 && pPos.y < 2)? lengthToAxis * pPos.y: lengthToAxis;
+    newPos.x += particleDir.x * lengthToAxis * 0.0025f;
+    newPos.z += particleDir.z * lengthToAxis * 0.0025f;
 
     return newPos;
 }

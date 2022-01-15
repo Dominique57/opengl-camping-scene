@@ -18,12 +18,11 @@ GpuParticleEmitter::GpuParticleEmitter(const glm::vec3 &position, float rescaleF
     // Enable options
     glEnable(GL_PROGRAM_POINT_SIZE); TEST_OPENGL_ERROR()
 
-    // Disable everything
     glBindVertexArray(0); TEST_OPENGL_ERROR()
     glBindBuffer(GL_ARRAY_BUFFER, 0); TEST_OPENGL_ERROR()
 }
 
-void GpuParticleEmitter::bind(const program &program) {
+void GpuParticleEmitter::bind_fragment(const program &program) {
     glBindVertexArray(vaoId); TEST_OPENGL_ERROR()
     glBindBuffer(GL_ARRAY_BUFFER, vboData); TEST_OPENGL_ERROR()
     {
@@ -49,6 +48,10 @@ void GpuParticleEmitter::bind(const program &program) {
     glBindBuffer(GL_ARRAY_BUFFER, 0); TEST_OPENGL_ERROR()
 }
 
+void GpuParticleEmitter::bind_compute(const program &program) {
+    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 1, vboData);
+}
+
 void GpuParticleEmitter::init_particles() {
     auto points = std::vector<ParticleRender>{};
     points.reserve(particleCount);
@@ -63,9 +66,7 @@ void GpuParticleEmitter::init_particles() {
         float xrand = std::clamp(norm(gen), -0.5f, 0.5f);
         float yrand = height(gen);
         float zrand = std::clamp(norm(gen), -0.5f, 0.5f);
-        float life = normHigh(gen);
-        if (life < 0)
-            life = -life;
+        float life = std::abs(normHigh(gen));
 
         const ParticleRender particle{
             {xrand, 0, zrand}, life,
@@ -77,19 +78,24 @@ void GpuParticleEmitter::init_particles() {
 
     glBindVertexArray(vaoId); TEST_OPENGL_ERROR()
     glBindBuffer(GL_ARRAY_BUFFER, vboData); TEST_OPENGL_ERROR()
-    glBufferData(GL_ARRAY_BUFFER, particleCount * sizeof(ParticleRender), points.data(),
+
+    glBufferData(GL_ARRAY_BUFFER, points.size() * sizeof(ParticleRender), points.data(),
                  GL_DYNAMIC_DRAW); TEST_OPENGL_ERROR()
+
     glBindVertexArray(0); TEST_OPENGL_ERROR()
     glBindBuffer(GL_ARRAY_BUFFER, 0); TEST_OPENGL_ERROR()
 }
 
-void GpuParticleEmitter::update(const program& computeShader) {
-    glBindBufferBase(GL_SHADER_STORAGE_BUFFER, 79, vboData);
+void GpuParticleEmitter::update() {
     glDispatchCompute((particleCount + 255) / 256, 1, 1);
     glMemoryBarrier(GL_ALL_BARRIER_BITS);
 }
 
-void GpuParticleEmitter::draw() {
+void GpuParticleEmitter::draw(const program &program) {
+    // Set transform
+    program.setUniformVec4("transform_pos_size", glm::vec4(emitterPos, rescaleFactor), true);
+
+    // Draw
     glBindVertexArray(vaoId); TEST_OPENGL_ERROR()
     glBindBuffer(GL_ARRAY_BUFFER, vboData); TEST_OPENGL_ERROR()
     glEnable(GL_BLEND);
@@ -100,6 +106,7 @@ void GpuParticleEmitter::draw() {
 
     glDepthMask(GL_TRUE);
     glDisable(GL_BLEND);
+
     glBindVertexArray(0); TEST_OPENGL_ERROR()
     glBindBuffer(GL_ARRAY_BUFFER, 0); TEST_OPENGL_ERROR()
 }

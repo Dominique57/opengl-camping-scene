@@ -19,9 +19,10 @@ public:
 public:
     explicit GpuParticleEmitter(const glm::vec3 &position, float rescaleFactor);
 
-    void bind(const program &program);
-    void update(const program& computeShader);
-    void draw();
+    void bind_fragment(const program &program);
+    void bind_compute(const program &program);
+    void update();
+    void draw(const program &program);
 
 //private:
     void init_particles();

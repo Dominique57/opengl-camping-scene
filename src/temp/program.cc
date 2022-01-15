@@ -90,6 +90,15 @@ void program::setUniformVec3(const char *name, const glm::vec3 &val,
     }
 }
 
+void program::setUniformVec4(const char *name, const glm::vec4 &val, bool throwIfMissing) const {
+    GLint eltLoc = glGetUniformLocSafe(program_, name);
+    if (eltLoc != -1) {
+        glProgramUniform4fv(program_, eltLoc, 1, &val[0]); TEST_OPENGL_ERROR()
+    } else if (throwIfMissing) {
+        throw std::invalid_argument("Name does not exist in shader !");
+    }
+}
+
 void program::setBool(const std::string &name, bool value) const
 {
     glUniform1i(glGetUniformLocation(program_, name.c_str()), (int)value);
