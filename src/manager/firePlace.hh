@@ -11,7 +11,7 @@ public:
 
     void bind(const program &program);
     void update();
-    void draw();
+    void draw(const program &program);
 
 protected:
     glm::vec3 pos;

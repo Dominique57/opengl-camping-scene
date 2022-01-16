@@ -4,21 +4,22 @@
 #include <random>
 
 ParticleEmitter::ParticleEmitter(const glm::vec3 &position, float rescaleFactor)
-    : vaoId(0), emitterPos(position), rescaleFactor(rescaleFactor) {
+    : vaoId(0), vboData(0), emitterPos(position), rescaleFactor(rescaleFactor) {
+    // Create and use vao
     glGenVertexArrays(1, &vaoId); TEST_OPENGL_ERROR()
     glBindVertexArray(vaoId); TEST_OPENGL_ERROR()
 
+    // Create and use vbo
     glGenBuffers(1, &vboData); TEST_OPENGL_ERROR()
     glBindBuffer(GL_ARRAY_BUFFER, vboData); TEST_OPENGL_ERROR()
     glBufferData(GL_ARRAY_BUFFER, 2000 * sizeof(ParticleRender), nullptr,
                  GL_DYNAMIC_DRAW); TEST_OPENGL_ERROR()
 
-//    glEnable(GL_POINT_SMOOTH); TEST_OPENGL_ERROR()
+    // Enable options
     glEnable(GL_PROGRAM_POINT_SIZE); TEST_OPENGL_ERROR()
 
     glBindVertexArray(0); TEST_OPENGL_ERROR()
     glBindBuffer(GL_ARRAY_BUFFER, 0); TEST_OPENGL_ERROR()
-
 }
 
 void ParticleEmitter::bind(const program &program) {
@@ -43,6 +44,7 @@ void ParticleEmitter::bind(const program &program) {
         glEnableVertexAttribArray(posLoc); TEST_OPENGL_ERROR()
     }
 
+    glBindVertexArray(0); TEST_OPENGL_ERROR()
     glBindBuffer(GL_ARRAY_BUFFER, 0); TEST_OPENGL_ERROR()
 }
 
@@ -59,12 +61,9 @@ void ParticleEmitter::update(double timePassed) {
         // Update data
         points[i].lifeLeft -= timePassed;
         // Set position
-        float r = (static_cast<float>(rand()) / static_cast<float>(RAND_MAX));
-        r = ((r * 10) + 5.f) / 1000.f;
-        points[i].position.y += r;
+        points[i].position.y += 0.01;
         {
             auto emitterPosPlane = glm::vec3(0);
-//            emitterPosPlane.y = 0;
             auto particlePosPlane = points[i].position;
             particlePosPlane.y = 0;
             auto particleDir = glm::normalize(emitterPosPlane - particlePosPlane);
@@ -116,29 +115,25 @@ void ParticleEmitter::update(double timePassed) {
     }
 }
 
-void ParticleEmitter::draw() {
-    // Copy and transform
-    std::vector<ParticleRender> copy;
-    copy = points;
-    for (auto& particle: copy) {
-        particle.position = particle.position * glm::vec3(rescaleFactor, rescaleFactor, rescaleFactor) + emitterPos;
-        particle.size *= rescaleFactor;
-    }
+void ParticleEmitter::draw(const program &program) {
+    // Set transform
+    program.setUniformVec4("transform_pos_size", glm::vec4(emitterPos, rescaleFactor), true);
+
     // Draw
     glBindVertexArray(vaoId); TEST_OPENGL_ERROR()
     glBindBuffer(GL_ARRAY_BUFFER, vboData); TEST_OPENGL_ERROR()
-
-
     glEnable(GL_BLEND);
     glDepthMask(GL_FALSE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 
-
-    glBufferData(GL_ARRAY_BUFFER, 4000 * sizeof(ParticleRender), copy.data(),
+    glBufferData(GL_ARRAY_BUFFER, 4000 * sizeof(ParticleRender), points.data(),
                  GL_DYNAMIC_DRAW); TEST_OPENGL_ERROR()
     glDrawArrays(GL_POINTS, 0, points.size()); TEST_OPENGL_ERROR()
     glDisable(GL_BLEND);
     glDepthMask(GL_TRUE);
+
+    glBindVertexArray(0); TEST_OPENGL_ERROR()
+    glBindBuffer(GL_ARRAY_BUFFER, 0); TEST_OPENGL_ERROR()
 }
 
 void ParticleEmitter::emit(unsigned count) {
@@ -150,12 +145,10 @@ void ParticleEmitter::emit(unsigned count) {
     for (auto i = 0U; i < count; ++i) {
         float xrand = std::clamp(norm(gen), -0.5f, 0.5f);
         float zrand = std::clamp(norm(gen), -0.5f, 0.5f);
-        float life = normHigh(gen);
-        if (life < 0)
-            life = -life;
+        float life = std::abs(normHigh(gen));
 
         const ParticleRender particle{
-            glm::vec3{xrand, 0, zrand},
+            {xrand, 0, zrand},
             {1, 0, 0}, 1, life
         };
         points.push_back(particle);

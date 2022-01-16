@@ -18,7 +18,7 @@ public:
     explicit ParticleEmitter(const glm::vec3 &position, float rescaleFactor);
     void bind(const program &program);
     void update(double timePassed);
-    void draw();
+    void draw(const program &program);
     void emit(unsigned count);
 
 protected:

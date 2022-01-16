@@ -9,6 +9,7 @@
 #include <manager/lightManager.hh>
 #include <manager/firePlace.hh>
 #include <player/camera.hh>
+#include <manager/gpuParticleEmitter.hh>
 #include "temp/init_gl.hh"
 #include "temp/program.hh"
 #include "texture/skybox.hh"
@@ -74,7 +75,7 @@ int run() {
     // Input callbacks
     glfwSetKeyCallback(window, handleKey);
     glfwSetCursorPosCallback(window, handleMouseMove);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+//    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetScrollCallback(window, handleScroll);
     // Reset cursor to center of the screen
     int screen_w, screen_h;
@@ -188,7 +189,17 @@ int run() {
         std::cerr << pointShader->getlog();
         return 1;
     }
-    auto firePlace = FirePlace({ 5, -17, 5 }, 3.f, lightManager);
+    auto particleUpdateShader = program::make_program_path({
+        {"compute/particle_update.glsl", GL_COMPUTE_SHADER, "COMPUTE"},
+    });
+    if (!particleUpdateShader->isready()) {
+        std::cerr << particleUpdateShader->getlog();
+        return 1;
+    }
+    auto gpuParticleEmitter = GpuParticleEmitter({0, -17, 5}, 3.f);
+    gpuParticleEmitter.bind_fragment(*pointShader);
+    gpuParticleEmitter.bind_compute(*particleUpdateShader);
+    auto firePlace = FirePlace({ 5, -17, 5 }, 2.5f, lightManager);
     firePlace.bind(*pointShader);
     auto fireworkEmitter = FireworkEmitter({5, -2, 40}, {0, 0, 1}, 1.f, lightManager);
     fireworkEmitter.bind(*pointShader);
@@ -242,7 +253,12 @@ int run() {
         fireworkEmitter.draw();
 
         firePlace.update();
-        firePlace.draw();
+        firePlace.draw(*pointShader);
+
+        gpuParticleEmitter.draw(*pointShader);
+
+        particleUpdateShader->use();
+        gpuParticleEmitter.update();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
