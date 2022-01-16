@@ -51,3 +51,23 @@ GBuffer::GBuffer(int screen_w, int screen_h)
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
+
+void GBuffer::use() {
+    glBindFramebuffer(GL_FRAMEBUFFER, fboId);
+}
+
+void GBuffer::unuse() {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+GLuint GBuffer::getPositionTexId() const {
+    return positionTexId;
+}
+
+GLuint GBuffer::getNormalTexId() const {
+    return normalTexId;
+}
+
+GLuint GBuffer::getAlbedoTexId() const {
+    return albedoTexId;
+}

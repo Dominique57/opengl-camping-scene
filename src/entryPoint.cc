@@ -11,6 +11,7 @@
 #include <player/camera.hh>
 #include <manager/gpuParticleEmitter.hh>
 #include <texture/gBuffer.hh>
+#include <temp/quad.hh>
 #include "temp/init_gl.hh"
 #include "temp/program.hh"
 #include "texture/skybox.hh"
@@ -69,6 +70,11 @@ void handleScroll(GLFWwindow*, double, double yoffset) {
     camera.alterMovementSpeed(yoffset / 10. + 1.f);
 }
 
+void handleFramebufferResize(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
+
 int run() {
     if (!initOpenglAndContext(window))
         return -1;
@@ -78,6 +84,7 @@ int run() {
     glfwSetCursorPosCallback(window, handleMouseMove);
 //    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetScrollCallback(window, handleScroll);
+    glfwSetFramebufferSizeCallback(window, handleFramebufferResize);
     // Reset cursor to center of the screen
     int screen_w, screen_h;
     glfwGetWindowSize(window, &screen_w, &screen_h);
@@ -111,14 +118,28 @@ int run() {
     skyboxShader->use();
     skybox.bindToProgram(*skyboxShader);
 
+//    auto* objShader = program::make_program_path({
+//        {"vert/obj_vertex_shader.glsl", GL_VERTEX_SHADER, "VERTEX"},
+//        {"frag/obj_fragment_shader.glsl", GL_FRAGMENT_SHADER, "FRAGMENT"},
+//    });
     auto* objShader = program::make_program_path({
-        {"vert/obj_vertex_shader.glsl", GL_VERTEX_SHADER, "VERTEX"},
-        {"frag/obj_fragment_shader.glsl", GL_FRAGMENT_SHADER, "FRAGMENT"},
+        {"vert/obj_deferred.glsl", GL_VERTEX_SHADER, "VERTEX"},
+        {"frag/obj_deferred.glsl", GL_FRAGMENT_SHADER, "FRAGMENT"},
     });
     if (!objShader->isready()) {
         std::cerr << "Failed to build shader :\n" << objShader->getlog() << '\n';
         return 1;
     }
+
+    auto* objLightShader = program::make_program_path({
+        {"vert/obj_lighting.glsl", GL_VERTEX_SHADER, "VERTEX"},
+        {"frag/obj_lighting.glsl", GL_FRAGMENT_SHADER, "FRAGMENT"},
+    });
+    if (!objLightShader->isready()) {
+        std::cerr << "Failed to build shader :\n" << objLightShader->getlog() << '\n';
+        return 1;
+    }
+    auto quad = Quad();
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     // stbi_set_flip_vertically_on_load(true);
@@ -206,16 +227,36 @@ int run() {
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
-        objShader->setUniformMat4("transform_matrix", camera.getTransform(), false);
+        objShader->setUniformMat4("projection_matrix", camera.getProjection(), false);
         objShader->setUniformMat4("view_matrix", camera.getView(), false);
         skyboxShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
         pointShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
 
         /* Render here */
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); TEST_OPENGL_ERROR()
+
+        gBuf.use();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); TEST_OPENGL_ERROR()
 
         objShader->use();
         models.draw();
+
+        gBuf.unuse();
+        objLightShader->use();
+        {
+            glActiveTexture(GL_TEXTURE0 + 0);
+            glBindTexture(GL_TEXTURE_2D, gBuf.getPositionTexId());
+            glUniform1i(glGetUniformLocation(objLightShader->get_program(), "gPosition"), 0); TEST_OPENGL_ERROR()
+            glActiveTexture(GL_TEXTURE0 + 1);
+            glBindTexture(GL_TEXTURE_2D, gBuf.getNormalTexId());
+            glUniform1i(glGetUniformLocation(objLightShader->get_program(), "gNormal"), 1); TEST_OPENGL_ERROR()
+            glActiveTexture(GL_TEXTURE0 + 2);
+            glBindTexture(GL_TEXTURE_2D, gBuf.getAlbedoTexId());
+            glUniform1i(glGetUniformLocation(objLightShader->get_program(), "gAlbedo"), 2); TEST_OPENGL_ERROR()
+            glActiveTexture(GL_TEXTURE0);
+        }
+        quad.draw();
 
         skyboxShader->use();
         skybox.draw();
