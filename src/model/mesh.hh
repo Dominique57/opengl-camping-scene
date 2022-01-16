@@ -36,7 +36,7 @@ public:
         setupMesh();
     }
 
-    void draw(program* program);
+    void draw(const program &program);
 
 private:
     // render data

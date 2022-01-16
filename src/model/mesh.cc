@@ -52,7 +52,7 @@ void Mesh::setupMesh()
     glBindVertexArray(0);
 }
 
-void Mesh::draw(program *program)
+void Mesh::draw(const program &program)
 {
     // For when we'll use light
     unsigned int diffuseNr = 1;
@@ -69,7 +69,7 @@ void Mesh::draw(program *program)
         else if(name == "texture_specular")
             number = std::to_string(specularNr++);
 
-        glUniform1i(glGetUniformLocation(program->get_program(), (name + number).c_str()), i); TEST_OPENGL_ERROR()
+        glUniform1i(glGetUniformLocation(program.get_program(), (name + number).c_str()), i); TEST_OPENGL_ERROR()
         glBindTexture(GL_TEXTURE_2D, textures_[i].id);
     }
     glActiveTexture(GL_TEXTURE0);

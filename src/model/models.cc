@@ -30,9 +30,9 @@ void Models::scaleModel(int index, glm::vec3 scale)
 }
 
 void Models::draw() {
+    modelsData_[0].model_.getProgram().use();
     for (auto modelData : modelsData_) {
-        modelData.model_.getProgram()->setUniformMat4("model", modelData.model_transform_, true);
-        modelData.model_.getProgram()->use();
+        modelData.model_.getProgram().setUniformMat4("model", modelData.model_transform_, true);
         modelData.model_.draw();
     }
 }
@@ -41,12 +41,12 @@ void Models::setUniformMat4(int index, const char *name,
                             const glm::mat4 &val,
                             bool throwIfMissing) const
 {
-    modelsData_.at(index).model_.getProgram()->setUniformMat4(name, val, throwIfMissing);
+    modelsData_.at(index).model_.getProgram().setUniformMat4(name, val, throwIfMissing);
 }
 
 void Models::setUniformMat4(const char *name, const glm::mat4 &val,
                             bool throwIfMissing) const
 {
     for (auto &model : modelsData_)
-        model.model_.getProgram()->setUniformMat4(name, val ,throwIfMissing);
+        model.model_.getProgram().setUniformMat4(name, val ,throwIfMissing);
 }

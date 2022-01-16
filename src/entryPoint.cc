@@ -110,32 +110,29 @@ int run() {
     skyboxShader->use();
     skybox.bindToProgram(*skyboxShader);
 
+    auto* objShader = program::make_program_path({
+        {"vert/obj_vertex_shader.glsl", GL_VERTEX_SHADER, "VERTEX"},
+        {"frag/obj_fragment_shader.glsl", GL_FRAGMENT_SHADER, "FRAGMENT"},
+    });
+    if (!objShader->isready()) {
+        std::cerr << "Failed to build shader :\n" << objShader->getlog() << '\n';
+        return 1;
+    }
+
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     // stbi_set_flip_vertically_on_load(true);
 
     // load models
-    Model grass("textures/grass/10450_Rectangular_Grass_Patch_v1_iterations-2.obj",
-                "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
-                {1, 0.1, 32});
-    Model tree("textures/tree/Tree.obj",
-               "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
-               {0.8, 0.3, 256});
-    Model bench("textures/bench/Lawka 2 - model.obj",
-                "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
-                {0.8, 0.8, 256});
-    Model firewood("textures/firewood/Bonfire model 1.obj",
-                   "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
-                   {0.8, 0.8, 256});
+    Model grass("textures/grass/10450_Rectangular_Grass_Patch_v1_iterations-2.obj", *objShader, {1, 0.1, 32});
+    Model tree("textures/tree/Tree.obj", *objShader, {0.8, 0.3, 256});
+    Model bench("textures/bench/Lawka 2 - model.obj", *objShader, {0.8, 0.8, 256});
+    Model firewood("textures/firewood/Bonfire model 1.obj", *objShader, {0.8, 0.8, 256});
 
     stbi_set_flip_vertically_on_load(true);
-    Model backpack("textures/backpack/backpack.obj",
-                   "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
-                   {0.8, 0.8, 256});
+    Model backpack("textures/backpack/backpack.obj", *objShader, {0.8, 0.8, 256});
     stbi_set_flip_vertically_on_load(false);
 
-    Model car("textures/car/RV Trailer Truck doors open.obj",
-                   "vert/obj_vertex_shader.glsl", "frag/obj_fragment_shader.glsl",
-                   {0.8, 0.8, 256});
+    Model car("textures/car/RV Trailer Truck doors open.obj", *objShader, {0.8, 0.8, 256});
 
     Models models{};
     auto grass_id1 = models.addModel(grass);
