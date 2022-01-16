@@ -39,7 +39,7 @@ vec3 computeDiffuseAndSpecular(vec3 objectColor) {
     vec3 resColor = vec3(0);
 
     for (int i = 0; i < lightsLength; ++i) {
-        vec3 lightPos = vec3(view_matrix * vec4(lights[i].pos, 1.0));
+        vec3 lightPos = lights[i].pos;
         vec3 toLight = normalize(lightPos - fragPos);
         vec3 normal = normalize(fragNormal);
         vec3 diffuseColor = dot(normal, toLight) * lights[i].color * diffusionFactor * objectColor;
@@ -63,7 +63,6 @@ vec4 gammaCorrect(vec3 color) {
 
 void main() {
     vec4 color = texture(texture_diffuse1, texCoords);
-//    out_color = vec4(computeDiffuseAndSpecular(color.xyz), color.w);
 
     gPosition = fragPos;
     gNormal = fragNormal;

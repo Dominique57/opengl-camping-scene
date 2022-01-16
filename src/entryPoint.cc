@@ -227,6 +227,8 @@ int run() {
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
+//        objLightShader->setUniformVec3("cameraPos", camera.viewCameraPos(), false);
+        objShader->setUniformVec3("cameraPos", camera.viewCameraPos(), false);
         objShader->setUniformMat4("projection_matrix", camera.getProjection(), false);
         objShader->setUniformMat4("view_matrix", camera.getView(), false);
         skyboxShader->setUniformMat4("transform_matrix", camera.getTransform(), true);

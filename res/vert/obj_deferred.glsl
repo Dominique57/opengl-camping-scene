@@ -16,7 +16,7 @@ void main()
 {
     vec4 worldPos = model * vec4(inPos, 1);
     // http://www.lighthouse3d.com/tutorials/glsl-12-tutorial/the-normal-matrix/
-    vec3 scaledNormal = mat3(transpose(inverse(view_matrix * model))) * inNormal;
+    vec3 scaledNormal = mat3(transpose(inverse(model))) * inNormal;
 
     // We send to fragShader: worldPos, texCoords, and normal (all in world space)
     fragPos = worldPos.xyz;
