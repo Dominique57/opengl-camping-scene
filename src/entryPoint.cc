@@ -10,6 +10,7 @@
 #include <manager/firePlace.hh>
 #include <player/camera.hh>
 #include <manager/gpuParticleEmitter.hh>
+#include <texture/gBuffer.hh>
 #include "temp/init_gl.hh"
 #include "temp/program.hh"
 #include "texture/skybox.hh"
@@ -201,20 +202,23 @@ int run() {
     auto fireworkEmitter = FireworkEmitter({5, -2, 40}, {0, 0, 1}, 1.f, lightManager);
     fireworkEmitter.bind(*pointShader);
 
+    auto gBuf = GBuffer(screen_w, screen_h);
+
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
-        models.setUniformMat4("transform_matrix", camera.getTransform(), false);
-        models.setUniformMat4("view_matrix", camera.getView(), false);
+        objShader->setUniformMat4("transform_matrix", camera.getTransform(), false);
+        objShader->setUniformMat4("view_matrix", camera.getView(), false);
         skyboxShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
         pointShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
 
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); TEST_OPENGL_ERROR()
 
+        objShader->use();
+        models.draw();
+
         skyboxShader->use();
         skybox.draw();
-
-        models.draw();
 
         pointShader->use();
         fireworkEmitter.update(0.004);

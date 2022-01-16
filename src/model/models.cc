@@ -30,7 +30,6 @@ void Models::scaleModel(int index, glm::vec3 scale)
 }
 
 void Models::draw() {
-    modelsData_[0].model_.getProgram().use();
     for (auto modelData : modelsData_) {
         modelData.model_.getProgram().setUniformMat4("model", modelData.model_transform_, true);
         modelData.model_.draw();
