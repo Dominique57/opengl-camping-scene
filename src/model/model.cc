@@ -4,7 +4,15 @@
 
 #include "model.hh"
 
+Model::Model(const char *path, const program& program,
+             const glm::vec3 &textureCoef)
+             : program_{program}, textureCoef_{textureCoef}
+{
+    loadModel(path);
+}
+
 void Model::draw() {
+    program_.setUniformVec3("texture_coef", textureCoef_, true);
     for(auto & meshe : meshes)
         meshe.draw(program_);
 }

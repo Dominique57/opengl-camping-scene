@@ -33,8 +33,10 @@ void Camera::rotateCamera(const glm::vec2& rawMovement) {
 }
 
 glm::mat4 Camera::getTransform() const {
-    auto viewMat = getView();
+    return getProjection() * getView();
+}
 
+glm::mat4 Camera::getProjection() const {
     // static const since its value ought not to be changed
     static const auto perspective = glm::perspective(
         glm::radians(65.0f),
@@ -42,8 +44,7 @@ glm::mat4 Camera::getTransform() const {
         0.1f,
         600.f
     );
-
-    return perspective * viewMat;
+    return perspective;
 }
 
 glm::mat4 Camera::getView() const {

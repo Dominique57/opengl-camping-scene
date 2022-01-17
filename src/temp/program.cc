@@ -23,8 +23,10 @@ void program::use() const {
 
 static inline std::string readFile(const std::string& path) {
     std::ifstream file(path);
-    if (!file.is_open())
-        throw std::invalid_argument("File");
+    if (!file.is_open()) {
+        auto msg = std::string("Program: readFile, file not found (") + path + ") !";
+        throw std::invalid_argument(msg);
+    }
 
     std::stringstream buffer;
     buffer << file.rdbuf();
