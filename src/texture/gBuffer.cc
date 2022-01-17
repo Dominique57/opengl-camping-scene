@@ -17,6 +17,8 @@ GBuffer::GBuffer(int screen_w, int screen_h)
                  GL_RGBA, GL_FLOAT, nullptr);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, positionTexId, 0);
 
     glGenTextures(1, &normalTexId);
@@ -49,6 +51,7 @@ GBuffer::GBuffer(int screen_w, int screen_h)
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         throw std::invalid_argument("GBuffer: FrameBuffer not complete !");
 
+    // Reset current framebuffer pointer
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

@@ -14,10 +14,6 @@ public:
     void use();
     void unuse();
 
-protected:
-    GLuint fboId;
-
-    GLuint positionTexId;
 public:
     GLuint getPositionTexId() const;
 
@@ -28,6 +24,10 @@ public:
     GLuint getFboId() const;
 
 protected:
+    GLuint fboId;
+
+    GLuint positionTexId;
+
     GLuint normalTexId;
     GLuint albedoTexId;
 

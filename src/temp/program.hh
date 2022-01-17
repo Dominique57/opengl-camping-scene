@@ -30,6 +30,12 @@ public:
     void setUniformMat4(const char *name, const glm::mat4& val,
                         bool throwIfMissing=false) const;
 
+    void setUniformInt(const char *name, int val,
+                        bool throwIfMissing=false) const;
+
+    void setUniformVec2(const char *name, const glm::vec2 &val,
+                        bool throwIfMissing=false) const;
+
     void setUniformVec3(const char *name, const glm::vec3 &val,
                         bool throwIfMissing=false) const;
 

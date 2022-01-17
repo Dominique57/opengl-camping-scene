@@ -82,6 +82,25 @@ void program::setUniformMat4(const char *name,
     }
 }
 
+void program::setUniformInt(const char *name, int val, bool throwIfMissing) const {
+    GLint eltLoc = glGetUniformLocSafe(program_, name);
+    if (eltLoc != -1) {
+        glProgramUniform1i(program_, eltLoc, val); TEST_OPENGL_ERROR()
+    } else if (throwIfMissing) {
+        throw std::invalid_argument("Name does not exist in shader !");
+    }
+}
+
+void program::setUniformVec2(const char *name, const glm::vec2 &val,
+                             bool throwIfMissing) const {
+    GLint eltLoc = glGetUniformLocSafe(program_, name);
+    if (eltLoc != -1) {
+        glProgramUniform2fv(program_, eltLoc, 1, &val[0]); TEST_OPENGL_ERROR()
+    } else if (throwIfMissing) {
+        throw std::invalid_argument("Name does not exist in shader !");
+    }
+}
+
 void program::setUniformVec3(const char *name, const glm::vec3 &val,
                              bool throwIfMissing) const {
     GLint eltLoc = glGetUniformLocSafe(program_, name);

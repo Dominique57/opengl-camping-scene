@@ -20,6 +20,6 @@ void main() {
     float specularShininess = texture_coef.z;
 
     gPosition = vec4(fragPos, specularFactor);
-    gNormal = vec4(fragNormal, specularShininess);
-    gAlbedo = color.xyz * diffusionFactor; // computeDiffuseAndSpecular(color.xyz);
+    gNormal = vec4(normalize(fragNormal), specularShininess);
+    gAlbedo = color.xyz * diffusionFactor;
 }
