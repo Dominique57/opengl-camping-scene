@@ -30,6 +30,7 @@
 GLFWwindow* window = nullptr;
 Camera camera(10, -10, 30);
 bool enableFireWorks = false;
+bool useOcclusion = true;
 void handleKey(GLFWwindow* window, int key, int scanCode, int action, int mods) {
     glm::vec3 moveOffset{ 0, 0, 0 };
     if (key == KEY_FOREWARD) {
@@ -49,10 +50,13 @@ void handleKey(GLFWwindow* window, int key, int scanCode, int action, int mods) 
     } else if (key == GLFW_KEY_P) {
         std::cout << "[CAMERA position]: " << camera.viewCameraPos() << std::endl;
     } else if (key == GLFW_KEY_ENTER) {
-        std::cout << scanCode << ":" << action << ":" << mods << std::endl;
         if (action == 1)
             enableFireWorks = !enableFireWorks;
-        std::cout << enableFireWorks << std::endl;
+        std::cout << "Switched firefowrks mode: " << std::noboolalpha << enableFireWorks << std::endl;
+    } else if (key == GLFW_KEY_O) {
+        if (action == 1)
+            useOcclusion = !useOcclusion;
+        std::cout << "Switched occlusion mode: " << std::noboolalpha << useOcclusion << std::endl;
     }
 
     camera.moveCamera(moveOffset);
@@ -258,7 +262,8 @@ int run() {
         objShader->setUniformMat4("view_matrix", camera.getView(), false);
         ssaoShader->setUniformMat4("projection_matrix", camera.getProjection(), false);
         objLightShader->setUniformMat4("view_matrix", camera.getView(), false);
-//        objLightShader->setUniformVec3("cameraPos", camera.viewCameraPos(), false);
+        objLightShader->setUniformMat4("view_matrix", camera.getView(), false);
+        objLightShader->setUniformInt("use_occlusion", useOcclusion, false);
         skyboxShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
         pointShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
 

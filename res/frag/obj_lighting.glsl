@@ -15,6 +15,7 @@ layout(std430, binding = 0) buffer Lights {
 };
 
 uniform mat4 view_matrix;
+uniform bool use_occlusion = true;
 layout(location = 0) uniform sampler2D gPosition;
 layout(location = 1) uniform sampler2D gNormal;
 layout(location = 2) uniform sampler2D gAlbedo;
@@ -26,10 +27,12 @@ out vec4 outColor;
 
 
 // Constants
-const float ambiantFactor = 0.1;
+const float ambiantFactor = 0.2;
 
-vec3 computeDiffuseAndSpecular(vec3 viewPos, vec3 viewNormal, vec3 objectColor, float ks, float ns) {
-    vec3 resColor = vec3(0);
+vec3 computeDiffuseAndSpecular(vec3 viewPos, vec3 viewNormal, vec3 objectColor, float ks, float ns, float occlusion) {
+    vec3 resColor = ambiantFactor * objectColor;
+    resColor *= (use_occlusion)? ((exp(occlusion) - 1) / (exp(1)-1)): 1;
+
 
     for (int i = 0; i < lightsLength; ++i) {
         vec3 lightPos = (view_matrix * vec4(lights[i].pos, 1)).xyz;
@@ -43,7 +46,7 @@ vec3 computeDiffuseAndSpecular(vec3 viewPos, vec3 viewNormal, vec3 objectColor, 
 
         resColor += clamp(diffuseColor, 0, 1) + clamp(specularColor, 0, 1);
     }
-    return clamp(resColor, ambiantFactor * objectColor, vec3(1)); // minimum is ambiant light
+    return clamp(resColor, vec3(0), vec3(1)); // minimum is ambiant light
 }
 
 vec4 gammaCorrect(vec3 color) {
@@ -60,7 +63,9 @@ void main() {
     float ns = texture(gNormal, texCoords).a;
     vec3 color = texture(gAlbedo, texCoords).rgb;
     float occlusion = texture(ssaoOcclusion, texCoords).x;
+
+//    // View model occlusion
 //    outColor = vec4(occlusion, occlusion, occlusion, 1);
 
-    outColor = vec4(computeDiffuseAndSpecular(fragPos, fragNormal, color, ks, ns), 1);
+    outColor = vec4(computeDiffuseAndSpecular(fragPos, fragNormal, color, ks, ns, occlusion), 1);
 }

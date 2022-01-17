@@ -15,8 +15,8 @@ in vec2 texCoords;
 out float outColor;
 
 // Constants
-const float radius = 0.5;
-const float biais = 0.025;
+const float radius = 5;
+const float biais = 0.00025;
 
 void main() {
     // Get pixel position data
