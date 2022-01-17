@@ -97,6 +97,8 @@ int run() {
         return -1;
 
     // Input callbacks
+    glfwWindowHint(GLFW_FLOATING, GLFW_TRUE);
+    glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwSetKeyCallback(window, handleKey);
     glfwSetCursorPosCallback(window, handleMouseMove);
 //    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
