@@ -15,7 +15,7 @@ in vec2 texCoords;
 out float outColor;
 
 // Constants
-const float radius = 5;
+const float radius = 3;
 const float biais = 0.00025;
 
 void main() {

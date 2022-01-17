@@ -5,13 +5,13 @@
 layout (location = 0) uniform sampler2D gPosition;
 layout (location = 1) uniform sampler2D image;
 
-uniform vec3 focusSettings = vec3(-30, 15, 10);
+uniform vec3 focusSettings = vec3(-30, 15, 5);
 uniform vec2 resolution;
 // I/O
 in vec2 texCoords;
 out vec4 outColor;
 
-const int iter = 10;
+const int iter = 5;
 const int boxCount = (iter * 2 + 1) * (iter * 2 + 1);
 
 vec3 blur() {

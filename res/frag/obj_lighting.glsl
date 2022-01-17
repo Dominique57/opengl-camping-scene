@@ -27,7 +27,7 @@ out vec4 outColor;
 
 
 // Constants
-const float ambiantFactor = 0.2;
+const float ambiantFactor = 0.3;
 
 vec3 computeDiffuseAndSpecular(vec3 viewPos, vec3 viewNormal, vec3 objectColor, float ks, float ns, float occlusion) {
     vec3 resColor = ambiantFactor * objectColor;
