@@ -7,9 +7,9 @@
 #include <random>
 
 
-class SsaoBuf {
+class SsaoBuffer {
 public:
-    SsaoBuf(int screen_w, int screen_h);
+    SsaoBuffer(int screen_w, int screen_h);
 
     GLuint getNoiseTexId() const;
 
@@ -20,6 +20,8 @@ public:
     GLuint getBlurFboId() const;
 
     GLuint getBlurColorTexId() const;
+
+    const std::vector<glm::vec3> &getKernel() const;
 
 private:
     void createNoiseTexture();

@@ -12,6 +12,7 @@
 #include <manager/gpuParticleEmitter.hh>
 #include <texture/gBuffer.hh>
 #include <temp/quad.hh>
+#include <texture/ssaoBuffer.hh>
 #include "temp/init_gl.hh"
 #include "temp/program.hh"
 #include "texture/skybox.hh"
@@ -118,10 +119,7 @@ int run() {
     skyboxShader->use();
     skybox.bindToProgram(*skyboxShader);
 
-//    auto* objShader = program::make_program_path({
-//        {"vert/obj_vertex_shader.glsl", GL_VERTEX_SHADER, "VERTEX"},
-//        {"frag/obj_fragment_shader.glsl", GL_FRAGMENT_SHADER, "FRAGMENT"},
-//    });
+    // Deferred rendering : geometry pass
     auto* objShader = program::make_program_path({
         {"vert/obj_deferred.glsl", GL_VERTEX_SHADER, "VERTEX"},
         {"frag/obj_deferred.glsl", GL_FRAGMENT_SHADER, "FRAGMENT"},
@@ -131,6 +129,7 @@ int run() {
         return 1;
     }
 
+    // Deferred rendering : lighting pass
     auto* objLightShader = program::make_program_path({
         {"vert/obj_lighting.glsl", GL_VERTEX_SHADER, "VERTEX"},
         {"frag/obj_lighting.glsl", GL_FRAGMENT_SHADER, "FRAGMENT"},
@@ -139,6 +138,17 @@ int run() {
         std::cerr << "Failed to build shader :\n" << objLightShader->getlog() << '\n';
         return 1;
     }
+
+    // Deferred rendering : ssao pass
+    auto* ssaoShader = program::make_program_path({
+        {"vert/ssao_pass.glsl", GL_VERTEX_SHADER, "VERTEX"},
+        {"frag/ssao_pass.glsl", GL_FRAGMENT_SHADER, "FRAGMENT"},
+    });
+    if (!ssaoShader->isready()) {
+        std::cerr << "Failed to build shader :\n" << ssaoShader->getlog() << '\n';
+        return 1;
+    }
+
     auto quad = Quad();
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
@@ -199,7 +209,6 @@ int run() {
         models.scaleModel(id, glm::vec3(5.0f, 5.0f, 5.0f));
     }
 
-    TEST_OPENGL_ERROR()
     auto pointShader = program::make_program_path({
         {"vert/shaderPoints.glsl", GL_VERTEX_SHADER, "VERTEX"},
         {"frag/shaderPoints.glsl", GL_FRAGMENT_SHADER, "FRAGMENT"},
@@ -224,12 +233,32 @@ int run() {
     fireworkEmitter.bind(*pointShader);
 
     auto gBuf = GBuffer(screen_w, screen_h);
+    auto ssaoBuf = SsaoBuffer(screen_w, screen_h);
+
+    objLightShader->use();
+    objLightShader->setUniformInt("gPosition", 0);
+    objLightShader->setUniformInt("gNormal", 1);
+    objLightShader->setUniformInt("gAlbedo", 2);
+    objLightShader->setUniformInt("ssaoOcclusion", 3);
+
+    ssaoShader->use();
+    ssaoShader->setUniformInt("gPosition", 0);
+    ssaoShader->setUniformInt("gNormal", 1);
+    ssaoShader->setUniformInt("noiseTex", 2);
+    for (auto i = 0U; i < ssaoBuf.getKernel().size(); ++i) {
+        auto name = std::string("kernel[") + std::to_string(i) + "]";
+        ssaoShader->setUniformVec3(name.c_str(), ssaoBuf.getKernel()[i], false);
+    }
+    ssaoShader->setUniformVec2("noiseScale", {screen_w / 4.f, screen_h / 4.f});
+
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
-        objLightShader->setUniformVec3("cameraPos", camera.viewCameraPos(), false);
         objShader->setUniformMat4("projection_matrix", camera.getProjection(), false);
         objShader->setUniformMat4("view_matrix", camera.getView(), false);
+        ssaoShader->setUniformMat4("projection_matrix", camera.getProjection(), false);
+        objLightShader->setUniformMat4("view_matrix", camera.getView(), false);
+//        objLightShader->setUniformVec3("cameraPos", camera.viewCameraPos(), false);
         skyboxShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
         pointShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
 
@@ -237,39 +266,50 @@ int run() {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); TEST_OPENGL_ERROR()
 
-        { // Deferred rendering
-            gBuf.use();
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-            TEST_OPENGL_ERROR()
+        // Deferred rendering
+        {
+            // Fill GBuffer
+            glBindFramebuffer(GL_FRAMEBUFFER, gBuf.getFboId());
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); TEST_OPENGL_ERROR()
 
             objShader->use();
             models.draw();
 
-            gBuf.unuse();
-            objLightShader->use();
+            // Ssao pass
+            glBindFramebuffer(GL_FRAMEBUFFER, ssaoBuf.getFboId());
+            glClear(GL_COLOR_BUFFER_BIT);
+            ssaoShader->use();
             {
                 glActiveTexture(GL_TEXTURE0 + 0);
-                glBindTexture(GL_TEXTURE_2D, gBuf.getPositionTexId());
-                glUniform1i(glGetUniformLocation(objLightShader->get_program(), "gPosition"), 0);
-                TEST_OPENGL_ERROR()
+                glBindTexture(GL_TEXTURE_2D, gBuf.getPositionTexId()); TEST_OPENGL_ERROR()
                 glActiveTexture(GL_TEXTURE0 + 1);
-                glBindTexture(GL_TEXTURE_2D, gBuf.getNormalTexId());
-                glUniform1i(glGetUniformLocation(objLightShader->get_program(), "gNormal"), 1);
-                TEST_OPENGL_ERROR()
+                glBindTexture(GL_TEXTURE_2D, gBuf.getNormalTexId()); TEST_OPENGL_ERROR()
                 glActiveTexture(GL_TEXTURE0 + 2);
-                glBindTexture(GL_TEXTURE_2D, gBuf.getAlbedoTexId());
-                glUniform1i(glGetUniformLocation(objLightShader->get_program(), "gAlbedo"), 2);
-                TEST_OPENGL_ERROR()
+                glBindTexture(GL_TEXTURE_2D, ssaoBuf.getNoiseTexId()); TEST_OPENGL_ERROR()
                 glActiveTexture(GL_TEXTURE0);
             }
             quad.draw();
 
+            // Lighting pass
+            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            objLightShader->use();
+            {
+                glActiveTexture(GL_TEXTURE0 + 0);
+                glBindTexture(GL_TEXTURE_2D, gBuf.getPositionTexId()); TEST_OPENGL_ERROR()
+                glActiveTexture(GL_TEXTURE0 + 1);
+                glBindTexture(GL_TEXTURE_2D, gBuf.getNormalTexId()); TEST_OPENGL_ERROR()
+                glActiveTexture(GL_TEXTURE0 + 2);
+                glBindTexture(GL_TEXTURE_2D, gBuf.getAlbedoTexId()); TEST_OPENGL_ERROR()
+                glActiveTexture(GL_TEXTURE0 + 3);
+                glBindTexture(GL_TEXTURE_2D, ssaoBuf.getColorTexId()); TEST_OPENGL_ERROR()
+                glActiveTexture(GL_TEXTURE0);
+            }
+            quad.draw();
+
+            // Depth buffer copy for foreward pass
             gBuf.use();
             glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuf.getFboId()); TEST_OPENGL_ERROR()
-            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); TEST_OPENGL_ERROR() // write to default framebuffer
-            // blit to default framebuffer. Note that this may or may not work as the internal formats of both the FBO and default framebuffer have to match.
-            // the internal formats are implementation defined. This works on all of my systems, but if it doesn't on yours you'll likely have to write to the
-            // depth buffer in another shader stage (or somehow see to match the default framebuffer's internal format with the FBO's internal format).
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); TEST_OPENGL_ERROR()
             glBlitFramebuffer(0, 0, screen_w, screen_h, 0, 0, screen_w, screen_h, GL_DEPTH_BUFFER_BIT, GL_NEAREST); TEST_OPENGL_ERROR()
             glBindFramebuffer(GL_FRAMEBUFFER, 0); TEST_OPENGL_ERROR()
         }

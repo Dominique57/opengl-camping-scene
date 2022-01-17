@@ -1,8 +1,8 @@
 // Created by dominique on 1/17/22.
 
-#include "ssaoBuf.hh"
+#include "ssaoBuffer.hh"
 
-SsaoBuf::SsaoBuf(int screen_w, int screen_h)
+SsaoBuffer::SsaoBuffer(int screen_w, int screen_h)
     : fboId(0), colorTexId(0), blurFboId(0), blurColorTexId(0), noiseTexId(0), kernel{}
 {
     // Create FBO
@@ -40,7 +40,7 @@ SsaoBuf::SsaoBuf(int screen_w, int screen_h)
     createRandomKernel();
 }
 
-void SsaoBuf::createNoiseTexture() {
+void SsaoBuffer::createNoiseTexture() {
     std::uniform_real_distribution<float> randomFloats(0.0, 1.0);
     std::default_random_engine generator;
 
@@ -64,7 +64,7 @@ void SsaoBuf::createNoiseTexture() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
-void SsaoBuf::createRandomKernel() {
+void SsaoBuffer::createRandomKernel() {
     kernel.clear();
 
     std::uniform_real_distribution<GLfloat> randomFloats(0.0, 1.0); // generates random floats between 0.0 and 1.0
@@ -84,22 +84,26 @@ void SsaoBuf::createRandomKernel() {
     }
 }
 
-GLuint SsaoBuf::getNoiseTexId() const {
+GLuint SsaoBuffer::getNoiseTexId() const {
     return noiseTexId;
 }
 
-GLuint SsaoBuf::getFboId() const {
+GLuint SsaoBuffer::getFboId() const {
     return fboId;
 }
 
-GLuint SsaoBuf::getColorTexId() const {
+GLuint SsaoBuffer::getColorTexId() const {
     return colorTexId;
 }
 
-GLuint SsaoBuf::getBlurFboId() const {
+GLuint SsaoBuffer::getBlurFboId() const {
     return blurFboId;
 }
 
-GLuint SsaoBuf::getBlurColorTexId() const {
+GLuint SsaoBuffer::getBlurColorTexId() const {
     return blurColorTexId;
+}
+
+const std::vector<glm::vec3> &SsaoBuffer::getKernel() const {
+    return kernel;
 }
