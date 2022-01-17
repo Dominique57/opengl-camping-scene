@@ -50,13 +50,17 @@ void handleKey(GLFWwindow* window, int key, int scanCode, int action, int mods) 
     } else if (key == GLFW_KEY_P) {
         std::cout << "[CAMERA position]: " << camera.viewCameraPos() << std::endl;
     } else if (key == GLFW_KEY_ENTER) {
-        if (action == 1)
+        if (action == 1) {
             enableFireWorks = !enableFireWorks;
-        std::cout << "Switched firefowrks mode: " << std::noboolalpha << enableFireWorks << std::endl;
+            std::cout << "Switched firefowrks mode: " << std::boolalpha << enableFireWorks
+                      << std::endl;
+        }
     } else if (key == GLFW_KEY_O) {
-        if (action == 1)
+        if (action == 1) {
             useOcclusion = !useOcclusion;
-        std::cout << "Switched occlusion mode: " << std::noboolalpha << useOcclusion << std::endl;
+            std::cout << "Switched occlusion mode: " << std::boolalpha << useOcclusion
+                      << std::endl;
+        }
     }
 
     camera.moveCamera(moveOffset);
@@ -135,7 +139,7 @@ int run() {
 
     // Deferred rendering : lighting pass
     auto* objLightShader = program::make_program_path({
-        {"vert/obj_lighting.glsl", GL_VERTEX_SHADER, "VERTEX"},
+        {"vert/quand_render.glsl", GL_VERTEX_SHADER, "VERTEX"},
         {"frag/obj_lighting.glsl", GL_FRAGMENT_SHADER, "FRAGMENT"},
     });
     if (!objLightShader->isready()) {
@@ -145,7 +149,7 @@ int run() {
 
     // Deferred rendering : ssao pass
     auto* ssaoShader = program::make_program_path({
-        {"vert/ssao_pass.glsl", GL_VERTEX_SHADER, "VERTEX"},
+        {"vert/quand_render.glsl", GL_VERTEX_SHADER, "VERTEX"},
         {"frag/ssao_pass.glsl", GL_FRAGMENT_SHADER, "FRAGMENT"},
     });
     if (!ssaoShader->isready()) {

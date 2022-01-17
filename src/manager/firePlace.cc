@@ -22,10 +22,8 @@ void FirePlace::bind(const program &program) {
 
 void FirePlace::update() {
     // Update light
-    static glm::vec3 intensityOne{
-            170.f / 255, 66.f / 255, 26.f / 255};
-    static glm::vec3 intensityTwo{
-            255.f / 255, 120.f / 255, 45.f / 255};
+    static auto intensityOne = glm::vec3{170.f, 66.f, 26.f} / 255.f;
+    static auto intensityTwo = glm::vec3{240.f, 110.f, 40.f} / 255.f;
     static unsigned noOfUpdatesNeeded = 0;
     static unsigned noOfUpdates = 0;
 
