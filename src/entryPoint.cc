@@ -13,6 +13,7 @@
 #include <texture/gBuffer.hh>
 #include <temp/quad.hh>
 #include <texture/ssaoBuffer.hh>
+#include <texture/dopBuffer.hh>
 #include "temp/init_gl.hh"
 #include "temp/program.hh"
 #include "texture/skybox.hh"
@@ -31,6 +32,7 @@ GLFWwindow* window = nullptr;
 Camera camera(10, -10, 30);
 bool enableFireWorks = false;
 bool useOcclusion = true;
+bool useDop = false;
 void handleKey(GLFWwindow* window, int key, int scanCode, int action, int mods) {
     glm::vec3 moveOffset{ 0, 0, 0 };
     if (key == KEY_FOREWARD) {
@@ -61,9 +63,15 @@ void handleKey(GLFWwindow* window, int key, int scanCode, int action, int mods) 
             std::cout << "Switched occlusion mode: " << std::boolalpha << useOcclusion
                       << std::endl;
         }
+    } else if (key == GLFW_KEY_F) {
+        if (action == 1) {
+            useDop = !useDop;
+            std::cout << "Switched depth of field mode: " << std::boolalpha << useDop
+                      << std::endl;
+        }
     }
 
-    camera.moveCamera(moveOffset);
+camera.moveCamera(moveOffset);
 }
 
 void handleMouseMove(GLFWwindow* window, double xpos, double ypos) {
@@ -157,6 +165,16 @@ int run() {
         return 1;
     }
 
+    // Depth of field shader
+    auto* dopShader = program::make_program_path({
+        {"vert/quand_render.glsl", GL_VERTEX_SHADER, "VERTEX"},
+        {"frag/dop_pass.glsl", GL_FRAGMENT_SHADER, "FRAGMENT"},
+    });
+    if (!dopShader->isready()) {
+        std::cerr << "Failed to build shader :\n" << dopShader->getlog() << '\n';
+        return 1;
+    }
+
     auto quad = Quad();
 
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
@@ -242,6 +260,7 @@ int run() {
 
     auto gBuf = GBuffer(screen_w, screen_h);
     auto ssaoBuf = SsaoBuffer(screen_w, screen_h);
+    auto dopBuf = DopBuffer(screen_w, screen_h);
 
     objLightShader->use();
     objLightShader->setUniformInt("gPosition", 0);
@@ -258,6 +277,11 @@ int run() {
         ssaoShader->setUniformVec3(name.c_str(), ssaoBuf.getKernel()[i], false);
     }
     ssaoShader->setUniformVec2("noiseScale", {screen_w / 4.f, screen_h / 4.f});
+
+    dopShader->use();
+    dopShader->setUniformInt("gPosition", 0);
+    dopShader->setUniformInt("image", 1);
+    dopShader->setUniformVec2("resolution", {screen_w, screen_h});
 
 
     /* Loop until the user closes the window */
@@ -300,7 +324,11 @@ int run() {
             quad.draw();
 
             // Lighting pass
-            glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            if (useDop) {
+                glBindFramebuffer(GL_FRAMEBUFFER, dopBuf.getFboId());
+            } else {
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+            }
             objLightShader->use();
             {
                 glActiveTexture(GL_TEXTURE0 + 0);
@@ -314,6 +342,22 @@ int run() {
                 glActiveTexture(GL_TEXTURE0);
             }
             quad.draw();
+
+            if (useDop) {
+                // Dop shader
+                glBindFramebuffer(GL_FRAMEBUFFER, 0);
+                dopShader->use();
+                {
+                    glActiveTexture(GL_TEXTURE0 + 0);
+                    glBindTexture(GL_TEXTURE_2D, gBuf.getPositionTexId());
+                    TEST_OPENGL_ERROR()
+                    glActiveTexture(GL_TEXTURE0 + 1);
+                    glBindTexture(GL_TEXTURE_2D, dopBuf.getColorTexId());
+                    TEST_OPENGL_ERROR()
+                    glActiveTexture(GL_TEXTURE0);
+                }
+                quad.draw();
+            }
 
             // Depth buffer copy for foreward pass
             gBuf.use();
