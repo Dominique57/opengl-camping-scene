@@ -25,6 +25,8 @@ public:
 
     GLuint getAlbedoTexId() const;
 
+    GLuint getFboId() const;
+
 protected:
     GLuint normalTexId;
     GLuint albedoTexId;

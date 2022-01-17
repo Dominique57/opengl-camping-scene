@@ -227,8 +227,7 @@ int run() {
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window)) {
-//        objLightShader->setUniformVec3("cameraPos", camera.viewCameraPos(), false);
-        objShader->setUniformVec3("cameraPos", camera.viewCameraPos(), false);
+        objLightShader->setUniformVec3("cameraPos", camera.viewCameraPos(), false);
         objShader->setUniformMat4("projection_matrix", camera.getProjection(), false);
         objShader->setUniformMat4("view_matrix", camera.getView(), false);
         skyboxShader->setUniformMat4("transform_matrix", camera.getTransform(), true);
@@ -238,27 +237,42 @@ int run() {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); TEST_OPENGL_ERROR()
 
-        gBuf.use();
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); TEST_OPENGL_ERROR()
+        { // Deferred rendering
+            gBuf.use();
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+            TEST_OPENGL_ERROR()
 
-        objShader->use();
-        models.draw();
+            objShader->use();
+            models.draw();
 
-        gBuf.unuse();
-        objLightShader->use();
-        {
-            glActiveTexture(GL_TEXTURE0 + 0);
-            glBindTexture(GL_TEXTURE_2D, gBuf.getPositionTexId());
-            glUniform1i(glGetUniformLocation(objLightShader->get_program(), "gPosition"), 0); TEST_OPENGL_ERROR()
-            glActiveTexture(GL_TEXTURE0 + 1);
-            glBindTexture(GL_TEXTURE_2D, gBuf.getNormalTexId());
-            glUniform1i(glGetUniformLocation(objLightShader->get_program(), "gNormal"), 1); TEST_OPENGL_ERROR()
-            glActiveTexture(GL_TEXTURE0 + 2);
-            glBindTexture(GL_TEXTURE_2D, gBuf.getAlbedoTexId());
-            glUniform1i(glGetUniformLocation(objLightShader->get_program(), "gAlbedo"), 2); TEST_OPENGL_ERROR()
-            glActiveTexture(GL_TEXTURE0);
+            gBuf.unuse();
+            objLightShader->use();
+            {
+                glActiveTexture(GL_TEXTURE0 + 0);
+                glBindTexture(GL_TEXTURE_2D, gBuf.getPositionTexId());
+                glUniform1i(glGetUniformLocation(objLightShader->get_program(), "gPosition"), 0);
+                TEST_OPENGL_ERROR()
+                glActiveTexture(GL_TEXTURE0 + 1);
+                glBindTexture(GL_TEXTURE_2D, gBuf.getNormalTexId());
+                glUniform1i(glGetUniformLocation(objLightShader->get_program(), "gNormal"), 1);
+                TEST_OPENGL_ERROR()
+                glActiveTexture(GL_TEXTURE0 + 2);
+                glBindTexture(GL_TEXTURE_2D, gBuf.getAlbedoTexId());
+                glUniform1i(glGetUniformLocation(objLightShader->get_program(), "gAlbedo"), 2);
+                TEST_OPENGL_ERROR()
+                glActiveTexture(GL_TEXTURE0);
+            }
+            quad.draw();
+
+            gBuf.use();
+            glBindFramebuffer(GL_READ_FRAMEBUFFER, gBuf.getFboId()); TEST_OPENGL_ERROR()
+            glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0); TEST_OPENGL_ERROR() // write to default framebuffer
+            // blit to default framebuffer. Note that this may or may not work as the internal formats of both the FBO and default framebuffer have to match.
+            // the internal formats are implementation defined. This works on all of my systems, but if it doesn't on yours you'll likely have to write to the
+            // depth buffer in another shader stage (or somehow see to match the default framebuffer's internal format with the FBO's internal format).
+            glBlitFramebuffer(0, 0, screen_w, screen_h, 0, 0, screen_w, screen_h, GL_DEPTH_BUFFER_BIT, GL_NEAREST); TEST_OPENGL_ERROR()
+            glBindFramebuffer(GL_FRAMEBUFFER, 0); TEST_OPENGL_ERROR()
         }
-        quad.draw();
 
         skyboxShader->use();
         skybox.draw();

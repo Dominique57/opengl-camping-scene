@@ -52,6 +52,10 @@ GBuffer::GBuffer(int screen_w, int screen_h)
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+GLuint GBuffer::getFboId() const {
+    return fboId;
+}
+
 void GBuffer::use() {
     glBindFramebuffer(GL_FRAMEBUFFER, fboId);
 }
