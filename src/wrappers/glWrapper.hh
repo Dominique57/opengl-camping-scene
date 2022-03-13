@@ -16,12 +16,6 @@
 }
 
 #define IGNORE_OPENGL_ERROR()   {   \
-    GLenum err = glGetError();      \
-    for (; err != GL_NO_ERROR; err = glGetError()) \
-        continue;                   \
-    }
-
-#define IGNORE_OPENGL_ERROR()   {   \
     GLenum err;                     \
     while ((err = glGetError()) == GL_NO_ERROR) \
         continue;                   \
