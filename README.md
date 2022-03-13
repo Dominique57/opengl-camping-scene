@@ -1,28 +1,67 @@
+# Computer Graphics: Opengl
+
+Project for POGL and POGLA course at [EPITA](https://www.epita.fr/) made by
 Dominique Michel et Lea Masselles
 
-# Comment utiliser ?
-Compiler le projet en utilisant cmake
+## What is it ?
+
+This is a 2-person group project where we implement basic OpenGL features and
+then add some more complex afterwards.
+
+The basics features are:
+- Sample scene with objects
+- Skybox
+- CPU particle system campfire
+- CPU particle system firework
+https://user-images.githubusercontent.com/9299438/137045293-bceb6b31-3912-467c-bcc3-aa5a0cf48d40.mp4
+
+The advanced features are:
+- GPU particle system campfire
+- SSAO (Screen Space Ambient Occlusion)
+- DOP (Depth of field)
+https://user-images.githubusercontent.com/9299438/137045293-bceb6b31-3912-467c-bcc3-aa5a0cf48d40.mp4
+
+## Setup
+
+To be able to compile and run the program you need :
+- [CMake](https://cmake.org/) (build system)
+- [OpenGL](https://opengl.org/) (library)
+
+Setup the build system and compile the project:
 ```bash
-42sh$ cmake -B build_folder -DCMAKE_BUILD_TYPE=Debug
+42sh$ cmake -B build_folder -DCMAKE_BUILD_TYPE=[Debug|Release]
 ```
-Lancer le projet dans le dossier res
+## Usage
+
+### Running the program
+
+Run the project with ressources in current directory:
 ```bash
+42sh$ cd build_folder && ln -s ../res/* . && ./myOpenGl
+42sh$ # OR
 42sh$ cd res && cp ../build_folder/myOpenGl . && ./myOpenGl
 ```
 
-# Les deplacements
-- *WASD* pour se deplacer
-- *ESPACE* pour aller vers le haut
-- *CTRL* pour aller vers le bas
-- *MOLETTE DE LA SOURIS* pour controler la vitesse de deplacement
+### Interactions and movements
+- *WASD* for first person movements
+- *MOUSE* for first person head rotations
+- *ESPACE* to fly upwards
+- *CTRL* to fly downwards
+- *MOUSE Wheel* control flying speed
+- *P* print camera position
 
-- *ENTER* pour activer / désactiver les feux d'artifices (old)
-- *P* pour afficher la position de la caméra
-- *O* pour ctiver / désactiver le SSAO
-- *F* pour activer / désactiver le depth of field (variable dans le shader dop_pass.glsl)
-  focusSettings = vec3(-30, 15, 5) où
-  x = position du point focal
-  y = demi-largeur de la zone claire
-  z = largeur de la zone de transition flou / claire
+- *ENTER* toggle fireworks
+- *O* toggle SSAO
+- *F* togle DOP (settings can be set in dop_pass.glsl)
+  focusSettings = vec3(-30, 15, 5) with
+  x = position of focal point
+  y = half-length of clear zone
+  z = length ofthe clear / blur transiation zone
 
-https://user-images.githubusercontent.com/9299438/137045293-bceb6b31-3912-467c-bcc3-aa5a0cf48d40.mp4
+## Known issues
+- Code could be better done a structured but this remains my first real opengl
+- project
+
+## Contributions
+- Dominique MICHEL <dominique.michel@epita.fr>
+- Léa MASSELLES <lea.masselles@epita.fr>
