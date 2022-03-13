@@ -21,7 +21,7 @@ The advanced features are:
 - SSAO (Screen Space Ambient Occlusion)
 - DOP (Depth of field)
 
-https://user-images.githubusercontent.com/9299438/158064456-6c4f653a-ae2f-4281-a5b9-f9d6ba5cfcbb.mp4
+https://user-images.githubusercontent.com/9299438/158064676-a0f2cc5c-64e8-4339-9044-31a4edf0a8d7.mp4
 
 ## Setup
 
