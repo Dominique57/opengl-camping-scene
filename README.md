@@ -13,13 +13,15 @@ The basics features are:
 - Skybox
 - CPU particle system campfire
 - CPU particle system firework
+
 https://user-images.githubusercontent.com/9299438/137045293-bceb6b31-3912-467c-bcc3-aa5a0cf48d40.mp4
 
 The advanced features are:
 - GPU particle system campfire
 - SSAO (Screen Space Ambient Occlusion)
 - DOP (Depth of field)
-https://user-images.githubusercontent.com/9299438/137045293-bceb6b31-3912-467c-bcc3-aa5a0cf48d40.mp4
+
+https://user-images.githubusercontent.com/9299438/158064265-2871f319-8343-4272-80ec-dee4a457d864.mp4
 
 ## Setup
 
