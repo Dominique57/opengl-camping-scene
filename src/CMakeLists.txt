@@ -38,7 +38,10 @@ add_library(SOURCE_LIB STATIC
     wrappers/glmWrapper.hh
     wrappers/wrapper.cc wrappers/wrapper.hh
     texture/gBuffer.cc texture/gBuffer.hh
-    temp/quad.cc temp/quad.hh texture/ssaoBuffer.cc texture/ssaoBuffer.hh texture/dopBuffer.cc texture/dopBuffer.hh)
+    temp/quad.cc temp/quad.hh
+    texture/ssaoBuffer.cc texture/ssaoBuffer.hh
+    texture/dopBuffer.cc texture/dopBuffer.hh
+    )
 
 target_compile_features(SOURCE_LIB PRIVATE
     cxx_std_17

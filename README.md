@@ -15,7 +15,7 @@ Lancer le projet dans le dossier res
 - *ESPACE* pour aller vers le haut
 - *CTRL* pour aller vers le bas
 - *MOLETTE DE LA SOURIS* pour controler la vitesse de deplacement
-  
+
 - *ENTER* pour activer / désactiver les feux d'artifices (old)
 - *P* pour afficher la position de la caméra
 - *O* pour ctiver / désactiver le SSAO
@@ -24,3 +24,5 @@ Lancer le projet dans le dossier res
   x = position du point focal
   y = demi-largeur de la zone claire
   z = largeur de la zone de transition flou / claire
+
+https://user-images.githubusercontent.com/9299438/137045293-bceb6b31-3912-467c-bcc3-aa5a0cf48d40.mp4
