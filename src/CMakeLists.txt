@@ -46,7 +46,7 @@ target_compile_features(SOURCE_LIB PRIVATE
 target_compile_options(SOURCE_LIB PRIVATE
     "-Wall"
     "-Wextra"
-    $<$<CONFIG:Release>:-Werror -O3>
+    $<$<CONFIG:Release>:-O3>
     $<$<CONFIG:Debug>:-O0 -ggdb>
     "-pedantic"
     )

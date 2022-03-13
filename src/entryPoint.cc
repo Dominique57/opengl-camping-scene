@@ -101,7 +101,7 @@ int run() {
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwSetKeyCallback(window, handleKey);
     glfwSetCursorPosCallback(window, handleMouseMove);
-//    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetScrollCallback(window, handleScroll);
     glfwSetFramebufferSizeCallback(window, handleFramebufferResize);
     // Reset cursor to center of the screen
@@ -252,7 +252,7 @@ int run() {
         std::cerr << particleUpdateShader->getlog();
         return 1;
     }
-    auto gpuParticleEmitter = GpuParticleEmitter({0, -17, 5}, 3.f);
+    auto gpuParticleEmitter = GpuParticleEmitter({5, -17, 5}, 3.f);
     gpuParticleEmitter.bind_fragment(*pointShader);
     gpuParticleEmitter.bind_compute(*particleUpdateShader);
     auto firePlace = FirePlace({ 5, -17, 5 }, 2.5f, lightManager);

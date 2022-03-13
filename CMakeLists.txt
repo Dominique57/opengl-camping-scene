@@ -28,7 +28,7 @@ target_compile_features(${PROJECT_NAME} PRIVATE
 target_compile_options(${PROJECT_NAME} PRIVATE
     "-Wall"
     "-Wextra"
-    $<$<CONFIG:Release>:-Werror -Ofast>
+    $<$<CONFIG:Release>:-Ofast>
     $<$<CONFIG:Debug>:-O0 -ggdb>
     "-pedantic"
     )

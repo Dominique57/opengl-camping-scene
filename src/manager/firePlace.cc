@@ -44,10 +44,10 @@ void FirePlace::update() {
     lightManager.updateLights();
     noOfUpdates -= 1;
 
-    particleEmitter.update(0.004);
-    particleEmitter.emit(4);
+//    particleEmitter.update(0.004);
+//    particleEmitter.emit(4);
 }
 
 void FirePlace::draw(const program &program) {
-    particleEmitter.draw(program);
+//    particleEmitter.draw(program);
 }
